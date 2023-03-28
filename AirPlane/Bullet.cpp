@@ -39,16 +39,16 @@ Bullet::~Bullet()
 void Bullet::Update(float deltaTime)
 {
 	velocity = VScale(VScale(dir, speed), deltaTime);
-	prevPos = VAdd(pos, velocity);
+	prePos = VAdd(pos, velocity);
 
 	if (offscreenDicision(pos))
 	{
 		SetVisible(false);
 	}
 
-	CollisionUpdate(prevPos);
+	CollisionUpdate(prePos);
 
-	pos = prevPos;
+	pos = prePos;
 	// à íuÇÃçXêV.
 	MV1SetPosition(modelHandle, pos);
 	MATRIX rotYMat = MGetRotY(180.0f * (float)(DX_PI_F / 180.0f));

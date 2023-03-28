@@ -7,7 +7,7 @@ public:
     PlayerCamera();
     ~PlayerCamera() {};
     void Init();
-    void Update(float deltaTime);
+    void Update(float deltaTime)override;
     void Input(float deltaTime);
     void Draw();
 private:
@@ -16,10 +16,13 @@ private:
     const float InitAccel = 30.0f;
     VECTOR velosity;
     VECTOR aimPos;// 注視点目標.
-    VECTOR prePos;// 予測ポジション.
-    float roll;
-    float rollInclement;
-    const float DefaultLength = 50.0f;
+    float roll;// x
+    float radianInclement;
+    const float DefaultLength = 800.0f;
     float length;
+
+    float pichi;// y
+    float yow;// z
+    const float PichiUp = 3.0f;
 };
 

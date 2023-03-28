@@ -52,7 +52,7 @@ protected:
 	void CollisionUpdate();
 	ObjectTag tag;// 登録名(登録票).
 	VECTOR pos;// 位置ベクトル.
-	VECTOR prevPos;// 予測位置ベクトル.
+	VECTOR prePos;// 予測位置ベクトル.
 	VECTOR dir;// 方向ベクトル.
 	int modelHandle;// モデルハンドル.
 	bool visible;// 表示するかどうかのハンドル（何もしなければ表示）.

@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "ObjectTag.h"
 #include "Collision.h"
-#include	 "CollisionType.h"
+#include "CollisionType.h"
 
 class ObjectBase
 {
@@ -23,7 +23,7 @@ public:
 
 	bool GetAlive() const { return alive; }// ゲームオブジェクト生きているか 
 
-	float GetHP() const { return HP; }// 装甲値の取得.
+	float GetHP() const { return AP; }// 装甲値の取得.
 
 	virtual void Update(float deltaTime) = 0;  // ゲームオブジェクト更新処理
 	virtual void Draw() {};// ゲームオブジェクト描画
@@ -44,8 +44,8 @@ protected:
 
 	void SetAlive(bool setFlag) { alive = setFlag; }// ゲームオブジェクト生死セット
 
-	void SetHP(const float set) { HP = set; }// 装甲値のセット.
-	void OnDamage(const float set) { HP -= set; };// ダメージを受けたとき.
+	void SetHP(const float set) { AP = set; }// 装甲値のセット.
+	void OnDamage(const float set) { AP -= set; };// ダメージを受けたとき.
 
 	void DrawCollider();
 	void CollisionUpdate(VECTOR pos);
@@ -57,15 +57,16 @@ protected:
 	int modelHandle;// モデルハンドル.
 	bool visible;// 表示するかどうかのハンドル（何もしなければ表示）.
 	bool alive;// 生きているかどうかのハンドル.
-	float HP;// 残りの体力(HP).
+	float AP;// 残りの装甲地(AP).
 
 	// 当たり判定関連.
 	CollisionType colType;// 当たり判定タイプ.
 	LineSegment colLine;// 当たり判定Line.
 	Sphere colSphere;// 当たり判定球.
 	Capsule colCapsule;// 当たり判定カプセル.
-	int colModel;// 当たり判定用モデル（表示モデルと別に簡易当たり判定モデルをセット）
+	int colModel;// 当たり判定用モデル（表示モデルと別に簡易当たり判定モデルをセット）.
 
-	const VECTOR InitVec = VGet(0.0f, 0.0f, 0.0f);
+	const VECTOR InitVecPos = VGet(0.0f, 0.0f, 0.0f);// 座標初期化用.
+	const VECTOR InitVecDir = VGet(0.0f, 0.0f, 1.0f);// 方向初期化用.
 };
 

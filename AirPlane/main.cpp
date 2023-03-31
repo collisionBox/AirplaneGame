@@ -1,9 +1,10 @@
 #include "DxLib.h"
 #include "DebugDraw.h"
 #include "ObjectManager.h"
-
+#include "AssetManager.h"
 
 #include "PlayerCamera.h"
+#include "player.h"
 int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) 
 {
 	// ＤＸライブラリ初期化処理
@@ -34,10 +35,14 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 
 	// マネージャー生成.
 	ObjectManager::Initialize();
+	AssetManager::Initalize();
 
 	PlayerCamera* camera = new PlayerCamera;
 	ObjectManager::Entry(camera);
+	Player* player = new Player;
+	ObjectManager::Entry(player);
 
+	
 	//時間計測.
 	LONGLONG nowTime = GetNowHiPerformanceCount();
 	LONGLONG prevTime = nowTime;
@@ -54,7 +59,11 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 		ScreenFlip();
 		prevTime = nowTime;
 	}
-	DxLib_End();
+	
+	ObjectManager::ReleseAllObj();
+	ObjectManager::Finalize();
+	AssetManager::Finalize();
 
+	DxLib_End();
 	return 0;
 }

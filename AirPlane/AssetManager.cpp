@@ -35,6 +35,7 @@ int AssetManager::GetMesh(string meshFileName)
 		meshID = MV1LoadModel(meshFileName.c_str());
 		if (meshID == -1)
 		{
+			printfDx("model load faild[%s]", meshFileName.c_str());
 			return meshID;
 		}
 		Instance->meshMap.emplace(meshFileName, meshID);

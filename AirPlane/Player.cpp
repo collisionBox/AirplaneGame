@@ -5,18 +5,28 @@ Player::Player() :
 {
 	modelHandle = AssetManager::GetMesh("data/player/player.mv1");
 	MV1SetScale(modelHandle, VGet(0.05f, 0.05f, 0.05f));
-	pos = InitVecPos;
-	dir = VScale(InitVecDir, -1);
-	MV1SetPosition(modelHandle, pos);
-	MV1SetRotationZYAxis(modelHandle, dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
+	
+	Init();
 }
 
 Player::~Player()
 {
 }
 
+void Player::Init()
+{
+	pos = InitVec;
+	dir = VScale(InitVecDir, -1);
+	velocity = InitVec;
+	MV1SetPosition(modelHandle, pos);
+	MV1SetRotationZYAxis(modelHandle, dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
+}
+
 void Player::Update(float deltaTime)
 {
+	float v = VSize(velocity);// ë¨ìx.
+
+
 }
 
 void Player::Draw()
@@ -26,4 +36,21 @@ void Player::Draw()
 
 void Player::OnCollisionEnter(const ObjectBase* other)
 {
+}
+https://sites.google.com/view/ronsu900/createfs/wing1
+AoAÇ©ÇÁCLÇ‹Ç≈éZèoÇ∑ÇÈä÷êîÇçÏê¨.
+//------------------------------------------------------------------------------
+// @brief ã¬äp(AngleOfAttack)ÇÃéZèo.
+//------------------------------------------------------------------------------
+float Player::CalculataAoA()
+{
+	return ToRadian(atan2f(velocity.y, velocity.z));
+}
+
+//------------------------------------------------------------------------------
+// @brief ógóÕåWêîÇÃéZèo.
+//------------------------------------------------------------------------------
+float Player::CalculateCL()
+{
+	return CalculataAoA() * 0.1f;
 }

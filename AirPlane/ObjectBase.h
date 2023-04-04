@@ -66,7 +66,7 @@ protected:
 	Capsule colCapsule;// 当たり判定カプセル.
 	int colModel;// 当たり判定用モデル（表示モデルと別に簡易当たり判定モデルをセット）.
 
-	const VECTOR InitVecPos = VGet(0.0f, 0.0f, 0.0f);// 座標初期化用.
+	const VECTOR InitVec = VGet(0.0f, 0.0f, 0.0f);// 座標初期化用.
 	const VECTOR InitVecDir = VGet(0.0f, 0.0f, 1.0f);// 方向初期化用.
 };
 

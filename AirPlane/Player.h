@@ -23,11 +23,11 @@ private:
     float upVec;
     float power;
     float rotateSpeed;
-
+    const VECTOR Gravity = VGet(0.0f, -G * Mass, 0.0f);
     const float AirDensity = 1.293f;// 空気密度.
     const float G = 9.80665f;// 重力加速度(m/s^2).
-
     const float Mass = 10400.0f;// 質量(kg).
+
     const float SpeedMax = 850.0f;
     const float BradeArea = 10.0f;// ブレード面積.
     const float BradeRadius = 14.6f;// ブレード半径.

@@ -23,7 +23,7 @@ Bullet::Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag) :
 	colSphere.radius = colRadius;
 	CollisionUpdate();
 	// •Ï”‚Ì‰Šú‰».
-	velocity = InitVecPos;
+	velocity = InitVec;
 	reflectionFlag = false;
 	myTag = userTag;
 

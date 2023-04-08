@@ -62,7 +62,17 @@ VECTOR operator*=(VECTOR& lhs, float rhs)
 	lhs = lhs * rhs;
 	return lhs;
 }
-
+//-------------------------------------------------------------------------------
+// @brief ベクトルを割る.
+//-------------------------------------------------------------------------------
+VECTOR Division(const VECTOR& In, float num)
+{
+	VECTOR vector;
+	vector.x = In.x / num;
+	vector.y = In.y / num;
+	vector.z = In.z / num;
+	return vector;
+}
 //-------------------------------------------------------------------------------
 // @brief ２つのベクトルの角度はほぼ同じか
 // @param[in] v1 調査したいベクトル1
@@ -116,10 +126,6 @@ VECTOR RotateForAimVecYAxis(const VECTOR& nowVec, const VECTOR& aimVec, float de
 	return rotVec;
 }
 
-float Sigmoid(float x, float gain)
-{
-	return 1.0 / (1.0 + exp(-gain * x));
-}
 
 float ToRadian(float degree)
 {

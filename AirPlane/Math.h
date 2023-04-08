@@ -20,6 +20,9 @@ VECTOR operator+=(VECTOR& lhs, const VECTOR& rhs);
 // @brief *= VECTORのスカラー倍の複合代入演算子
 VECTOR operator*=(VECTOR& lhs, float rhs);
 
+// @brief ベクトルを割る.
+VECTOR Division(const VECTOR& In, float num);
+
 // @brief ２つのベクトルの角度はほぼ同じか
 bool IsNearAngle(const VECTOR& v1, const VECTOR& v2);
 
@@ -28,9 +31,6 @@ float CalcRotationDirectionYAxis(const VECTOR& nowVec, const VECTOR& dirVec);
 
 // @brief nowVecから aimVecに向かってdegreeVerociyの速度でY回転する.
 VECTOR RotateForAimVecYAxis(const VECTOR& nowVec, const VECTOR& aimVec, float degreeVerocity);
-
-// @brief シグモイド関数 x:変数 gain:増加量
-float Sigmoid(float x, float gain);
 
 // @brief 度数法→弧度法
 float ToRadian(float degree);

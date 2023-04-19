@@ -21,5 +21,6 @@ private:
 
 	unordered_map<string, int> meshMap;// メッシュ原本.
 	vector<int> duplicateMesh;// メッシュを複製したもの
+
 };
 

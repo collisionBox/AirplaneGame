@@ -20,6 +20,7 @@ void AssetManager::Initalize()
 	if (!Instance)
 	{
 		Instance = new AssetManager;
+		 
 	}
 }
 

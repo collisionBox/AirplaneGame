@@ -21,37 +21,85 @@ Player::~Player()
 
 void Player::Init()
 {
+
+
 	pos = InitVec;
 	dir = InitVecDir;
-	velocity = InitDir;
-	upVec = 10.0f;
-	power = 0.0f;
-	rotateSpeed = 0.0f;
-	acceleration = InitVec;
-	orientation = InitVec;
+	dirAdd = InitVec;
+	velocity = InitVec;
 	MV1SetPosition(modelHandle, pos);
 	MV1SetRotationZYAxis(modelHandle, dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
 }
 
 void Player::Update(float deltaTime)
 {
-	if (CheckHitKey(KEY_INPUT_LSHIFT))
+	VECTOR right = VCross(VGet(0.0f, 1.0f, 0.0f), dir);
+	VECTOR left = VCross(dir, VGet(0.0f, 1.0f, 0.0f));
+	if (CheckHitKey(KEY_INPUT_E))// ヨー（右）.
 	{
-		power += upVec * deltaTime;
-		velocity.y += power;
+		dirAdd = VAdd(dir, VScale(right, YowSpeed));
 	}
-	else
+	if (CheckHitKey(KEY_INPUT_Q))// ヨー（左）.
 	{
-		power -= deltaTime;
 		
+		dirAdd = VAdd(dir, VScale(left, YowSpeed));
 	}
-	if (velocity.y >= MaxUpVec)
+
+	if (CheckHitKey(KEY_INPUT_W))
 	{
-		velocity.y = upVec;
+		VECTOR cross = VCross(dir, left);
+		dirAdd = VAdd(dir, VScale(cross, YowSpeed));
+	}
+	if (CheckHitKey(KEY_INPUT_S))
+	{
+	}
+
+	if (CheckHitKey(KEY_INPUT_A))
+	{
+
+	}
+	if (CheckHitKey(KEY_INPUT_D))
+	{
+
+	}
+	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)// 上昇.
+	{
+		VECTOR upward = VCross(left, dir);
+		velocity = VAdd(velocity, VScale(upward, UpwardAccel));
+	}
+	else if (!CheckHitKey(KEY_INPUT_LSHIFT) && velocity.y > DefaultDownwardSpeed)
+	{
+		velocity.y -= DefaultDownwardAccel;
+		if (velocity.y <= DefaultDownwardSpeed)
+		{
+			velocity.y = DefaultDownwardSpeed;
+		}
+	}
+	
+	if (CheckHitKey(KEY_INPUT_LCONTROL) && VSize(velocity) >= -MaxSpeed)// 下降.
+	{
+		VECTOR downward = VCross(dir, left);
+		velocity = VAdd(velocity, VScale(downward, DownwardAccel));
+	}
+	else if (!CheckHitKey(KEY_INPUT_LCONTROL) && velocity.y < DefaultDownwardSpeed)
+	{
+		velocity.y += DefaultUpwardAccel;
+		if (velocity.y >= DefaultDownwardSpeed)
+		{
+			velocity.y = DefaultDownwardSpeed;
+		}
 	}
 
 	prePos = VAdd(pos, VScale(velocity, deltaTime));
+	if (prePos.y < 0.0f)
+	{
+		velocity.y = 0.0f;
+		prePos.y = 0.0f;
+		dir.y = 0.0f;
+	}
 	pos = prePos;
+	dir = VAdd(dir, VScale(dirAdd, deltaTime));
+	dir = VNorm(dir);
 	MV1SetPosition(modelHandle, this->pos);
 	MATRIX rotYMat = MGetRotY(180.0f * (float)(DX_PI_F / 180.0f));
 	VECTOR negativeVec = VTransform(dir, rotYMat);
@@ -60,7 +108,10 @@ void Player::Update(float deltaTime)
 
 void Player::Draw()
 {
+	int white = GetColor(255, 255, 255);
 	MV1DrawModel(modelHandle);
+	DrawFormatString(0, 0, white, "vel:%f", velocity.y);
+	DrawFormatString(0, 20, white, "dir:%f,%f,%f", dir.x, dir.y, dir.z);
 }
 
 void Player::OnCollisionEnter(const ObjectBase* other)

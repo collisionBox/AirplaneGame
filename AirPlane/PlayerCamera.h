@@ -9,6 +9,7 @@ public:
     void Update(float deltaTime)override;
 
 private:
+    ObjectBase* player;
     VECTOR targetPos;
     const float len = 100.0f;
 };

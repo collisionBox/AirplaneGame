@@ -1,5 +1,5 @@
 #include "PlayerCamera.h"
-
+#include "ObjectManager.h"
 PlayerCamera::PlayerCamera() : 
 	ObjectBase(ObjectTag::Camera)
 {
@@ -8,6 +8,7 @@ PlayerCamera::PlayerCamera() :
 	targetPos = VAdd(pos, VScale(dir, len));
 
 	SetCameraPositionAndTarget_UpVecY(pos, targetPos);
+	player = ObjectManager::GetFirstObject(ObjectTag::Player);
 }
 
 PlayerCamera::~PlayerCamera()
@@ -16,4 +17,5 @@ PlayerCamera::~PlayerCamera()
 
 void PlayerCamera::Update(float deltaTime)
 {
+	
 }

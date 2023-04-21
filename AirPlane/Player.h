@@ -13,7 +13,8 @@ private:
 
     VECTOR velocity; // ‘¬“x[m/s].
     VECTOR dirAdd;
-    const float YowSpeed = 2.0f;
+    VECTOR zAxsisDir;
+    const float YowSpeed = 10.0f;
     const float UpwardAccel = 8.0f;
     const float DefaultUpwardAccel = 5.0f;
     const float DownwardAccel = 8.0f;

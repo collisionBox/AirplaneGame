@@ -8,7 +8,6 @@ PlayerCamera::PlayerCamera() :
 	targetPos = VAdd(pos, VScale(dir, len));
 
 	SetCameraPositionAndTarget_UpVecY(pos, targetPos);
-	player = ObjectManager::GetFirstObject(ObjectTag::Player);
 }
 
 PlayerCamera::~PlayerCamera()
@@ -17,5 +16,14 @@ PlayerCamera::~PlayerCamera()
 
 void PlayerCamera::Update(float deltaTime)
 {
+	ObjectBase* player = ObjectManager::GetFirstObject(ObjectTag::Player);
+	if (player != nullptr)
+	{
+		VECTOR playerDir = player->GetDir();
+		//pos = VGet(playerDir.x * len, player->GetPos().y, playerDir.z * len);
+		targetPos = player->GetPos();
+		SetCameraPositionAndTarget_UpVecY(pos, targetPos);
+	}
+	
 	
 }

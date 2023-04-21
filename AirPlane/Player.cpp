@@ -26,6 +26,7 @@ void Player::Init()
 	pos = InitVec;
 	dir = InitVecDir;
 	dirAdd = InitVec;
+	zAxsisDir = InitVecDir;// ロールの制御ができそう？
 	velocity = InitVec;
 	MV1SetPosition(modelHandle, pos);
 	MV1SetRotationZYAxis(modelHandle, dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
@@ -37,31 +38,33 @@ void Player::Update(float deltaTime)
 	VECTOR left = VCross(dir, VGet(0.0f, 1.0f, 0.0f));
 	if (CheckHitKey(KEY_INPUT_E))// ヨー（右）.
 	{
-		dirAdd = VAdd(dir, VScale(right, YowSpeed));
+		MATRIX matrix = MGetRotY(ToRadian(YowSpeed));
+		dir = VTransform(dir, matrix);
 	}
 	if (CheckHitKey(KEY_INPUT_Q))// ヨー（左）.
 	{
-		
-		dirAdd = VAdd(dir, VScale(left, YowSpeed));
+		MATRIX matrix = MGetRotY(-ToRadian(YowSpeed));
+		dir = VTransform(dir, matrix);
 	}
 
 	if (CheckHitKey(KEY_INPUT_W))
 	{
-		VECTOR cross = VCross(dir, left);
-		dirAdd = VAdd(dir, VScale(cross, YowSpeed));
+		MATRIX matrix = MGetRotZ(ToRadian(YowSpeed));
+		zAxsisDir = VTransform(zAxsisDir, matrix);
 	}
 	if (CheckHitKey(KEY_INPUT_S))
 	{
+		MATRIX matrix = MGetRotZ(ToRadian(YowSpeed));
+		zAxsisDir = VTransform(zAxsisDir, matrix);
 	}
-
-	if (CheckHitKey(KEY_INPUT_A))
+	/*if (CheckHitKey(KEY_INPUT_A))
 	{
 
 	}
 	if (CheckHitKey(KEY_INPUT_D))
 	{
 
-	}
+	}*/
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)// 上昇.
 	{
 		VECTOR upward = VCross(left, dir);
@@ -98,12 +101,11 @@ void Player::Update(float deltaTime)
 		dir.y = 0.0f;
 	}
 	pos = prePos;
-	dir = VAdd(dir, VScale(dirAdd, deltaTime));
 	dir = VNorm(dir);
 	MV1SetPosition(modelHandle, this->pos);
-	MATRIX rotYMat = MGetRotY(180.0f * (float)(DX_PI_F / 180.0f));
-	VECTOR negativeVec = VTransform(dir, rotYMat);
-	MV1SetRotationZYAxis(modelHandle, negativeVec, VGet(0.0f, 1.0f, 0.0f), 0.0f);
+	//MATRIX rotYMat = MGetRotY(180.0f * (DX_PI_F / 180.0f));
+	//VECTOR negativeVec = VTransform(dir, rotYMat);
+	MV1SetRotationZYAxis(modelHandle, dir, zAxsisDir, 0.0f);
 }
 
 void Player::Draw()

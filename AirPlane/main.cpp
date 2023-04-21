@@ -37,10 +37,13 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 	ObjectManager::Initialize();
 	AssetManager::Initalize();
 
-	PlayerCamera* camera = new PlayerCamera;
-	ObjectManager::Entry(camera);
+
 	Player* player = new Player;
 	ObjectManager::Entry(player);
+
+	PlayerCamera* camera = new PlayerCamera;
+	ObjectManager::Entry(camera);
+	
 
 	
 	//ŽžŠÔŒv‘ª.

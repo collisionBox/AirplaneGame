@@ -37,3 +37,30 @@ float ToRadian(float degree);
 
 // @brief ベクトルの大きさを求める.
 float VectorSize(VECTOR& vec);
+
+typedef struct
+{
+	float t;// real.
+	float x;
+	float y;
+	float z;
+} QUATERNION;
+
+// @brief クォータニオンの計算.
+QUATERNION operator*(QUATERNION q1, QUATERNION q2);
+
+// @brief 回転クォータニオン.
+QUATERNION CreateRotationQuaternion(float radian, VECTOR Axis);
+
+// @brief 位置クォータニオン.
+QUATERNION CreateXYZToQuaternion(float PosX, float PosY, float PosZ);
+QUATERNION CreateXYZToQuaternion(VECTOR pos);
+
+// @brief クォータニオンから回転行列へ.
+MATRIX QuaternionToMatrix(QUATERNION q);
+
+// MATRIX to VECTOR
+VECTOR ToXAxis(MATRIX mat);
+VECTOR ToYAxis(MATRIX mat);
+VECTOR ToZAxis(MATRIX mat);
+

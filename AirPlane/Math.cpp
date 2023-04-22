@@ -136,3 +136,130 @@ float VectorSize(VECTOR& vec)
 {
 	return sqrtf((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z));
 }
+
+QUATERNION operator*(QUATERNION q1, QUATERNION q2)
+{
+	QUATERNION ans;
+	float d1, d2, d3, d4;
+
+	// tのパラメータの計算.
+	d1 = q1.t * q2.t;
+	d2 = -q1.x * q2.x;
+	d3 = -q1.y * q2.y;
+	d4 = -q1.z * q2.z;
+	ans.t = d1 + d2 + d3 + d4;
+
+	// xパラメータの計算.
+	d1 = q1.t * q2.x;
+	d2 = q2.t * q1.x;
+	d3 = q1.y * q2.z;
+	d4 = -q1.z * q2.y;
+	ans.x = d1 + d2 + d3 + d4;
+
+	// ｙパラメータの計算.
+	d1 = q1.t * q2.y;
+	d2 = q2.t * q1.y;
+	d3 = q1.z * q2.x;
+	d4 = -q1.x * q2.z;
+	ans.y = d1 + d2 + d3 + d4;
+
+	// zパラメータの計算.
+	d1 = q1.t * q2.z;
+	d2 = q2.t * q1.z;
+	d3 = q1.x * q2.y;
+	d4 = -q1.y * q2.x;
+	ans.z = d1 + d2 + d3 + d4;
+
+	return ans;
+	
+}
+
+QUATERNION CreateRotationQuaternion(float radian, VECTOR Axis)
+{
+	QUATERNION ans;
+	float norm;
+	float ccc, sss;
+
+	ans.t = ans.x = ans.y = ans.z = 0.0f;
+
+	norm = Axis.x * Axis.x + Axis.y * Axis.y + Axis.z * Axis.z;
+	if (norm <= 0.0f)
+	{
+		return ans;
+	}
+
+	norm = 1.0f / sqrt(norm);
+	Axis.x *= norm;
+	Axis.y *= norm;
+	Axis.z *= norm;
+
+	ccc = cos(0.5 * radian);
+	sss = sin(0.5 * radian);
+
+	ans.t = ccc;
+	ans.x = sss * Axis.x;
+	ans.y = sss * Axis.y;
+	ans.z = sss * Axis.z;
+
+	return ans;
+}
+
+QUATERNION CreateXYZToQuaternion(float PosX, float PosY, float PosZ)
+{
+	QUATERNION ans;
+
+	ans.t = 0.0f;
+	ans.x = PosX;
+	ans.y = PosY;
+	ans.z = PosZ;
+
+	return ans;
+}
+
+QUATERNION CreateXYZToQuaternion(VECTOR pos)
+{
+	QUATERNION ans;
+
+	ans.t = 0.0f;
+	ans.x = pos.x;
+	ans.y = pos.y;
+	ans.z = pos.z;
+
+	return ans;
+}
+
+MATRIX QuaternionToMatrix(QUATERNION q)
+{
+	MATRIX mat = MGetIdent();
+	// x軸.
+	mat.m[0][0] = 1.0f - 2.0f * q.y * q.y - 2.0f * q.z * q.z;
+	mat.m[0][1] = 2.0f * q.x * q.y + 2.0f * q.t * q.z;
+	mat.m[0][2] = 2.0f * q.x * q.z - 2.0f * q.t * q.y;
+
+	// y軸.
+	mat.m[1][0] = 2.0f * q.x * q.y - 2.0f * q.t * q.z;
+	mat.m[1][1] = 1.0f - 2.0f * q.x * q.x - 2.0f * q.z * q.z;
+	mat.m[1][2] = 2.0f * q.y * q.z + 2.0f * q.t * q.x;
+
+	// z軸.
+	mat.m[2][0] = 2.0f * q.x * q.z + 2.0f * q.t * q.y;
+	mat.m[2][1] = 2.0f * q.y * q.z - 2.0f * q.t * q.x;
+	mat.m[2][2] = 1.0f - 2.0f * q.x * q.x - 2.0f * q.y * q.y;
+
+	return mat;
+}
+
+VECTOR ToXAxis(MATRIX mat)
+{
+	return VGet(mat.m[0][0], mat.m[0][1], mat.m[0][2]);
+}
+
+VECTOR ToYAxis(MATRIX mat)
+{
+	return VGet(mat.m[1][0], mat.m[1][1], mat.m[1][2]);
+}
+
+VECTOR ToZAxis(MATRIX mat)
+{
+	return VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]);
+}

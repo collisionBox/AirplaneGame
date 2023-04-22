@@ -10,8 +10,8 @@ Player::Player() :
 	ObjectBase(ObjectTag::Player)
 {
 	modelHandle = AssetManager::GetMesh("data/player/player.mv1");
-	MV1SetScale(modelHandle, VGet(0.05f, 0.05f, 0.05f));
-	
+	mat = MGetScale(VGet(ModelScale, ModelScale, ModelScale));
+
 	Init();
 }
 
@@ -24,10 +24,19 @@ void Player::Init()
 
 
 	pos = InitVec;
-	dir = InitVecDir;
+	dir = InitDir;
 	dirAdd = InitVec;
-	zAxsisDir = InitVecDir;// ロールの制御ができそう？
+	zAxsisDir = VGet(0, 1, 0);// ロールの制御ができそう？
 	velocity = InitVec;
+	rotate = InitVec;
+
+	yaw = pitch = roll = 0.0f;
+	quat.x = quat.y = quat.z = 0.0f;
+	quat.t = 1.0f;
+
+
+
+
 	MV1SetPosition(modelHandle, pos);
 	MV1SetRotationZYAxis(modelHandle, dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
 }
@@ -36,35 +45,69 @@ void Player::Update(float deltaTime)
 {
 	VECTOR right = VCross(VGet(0.0f, 1.0f, 0.0f), dir);
 	VECTOR left = VCross(dir, VGet(0.0f, 1.0f, 0.0f));
-	if (CheckHitKey(KEY_INPUT_E))// ヨー（右）.
+	bool yawFlag = false;
+	// ヨー.
+	if (CheckHitKey(KEY_INPUT_E))
 	{
-		MATRIX matrix = MGetRotY(ToRadian(YowSpeed));
-		dir = VTransform(dir, matrix);
+		yaw += 0.1f;
+		yawFlag = true;
 	}
-	if (CheckHitKey(KEY_INPUT_Q))// ヨー（左）.
+	if (CheckHitKey(KEY_INPUT_Q))
 	{
-		MATRIX matrix = MGetRotY(-ToRadian(YowSpeed));
-		dir = VTransform(dir, matrix);
+		yaw -= 0.1f;
+		yawFlag = true;
 	}
-
+	if (!yawFlag)
+	{
+		yaw = 0.0f;
+	}
+	// ピッチ.
+	bool pitchFlag = false;
 	if (CheckHitKey(KEY_INPUT_W))
 	{
-		MATRIX matrix = MGetRotZ(ToRadian(YowSpeed));
-		zAxsisDir = VTransform(zAxsisDir, matrix);
+		pitch += 0.1f;
+		pitchFlag = true;
 	}
 	if (CheckHitKey(KEY_INPUT_S))
 	{
-		MATRIX matrix = MGetRotZ(ToRadian(YowSpeed));
-		zAxsisDir = VTransform(zAxsisDir, matrix);
+		pitch -= 0.1f;
+		pitchFlag = true;
 	}
-	/*if (CheckHitKey(KEY_INPUT_A))
+	if (!pitchFlag)
 	{
-
+		pitch = 0.0f;
+	}
+	// ロール.
+	bool rollFlag = false;
+	if (CheckHitKey(KEY_INPUT_A))
+	{
+		roll += 0.1f;
+		rollFlag = true;
 	}
 	if (CheckHitKey(KEY_INPUT_D))
 	{
+		roll -= 0.1f;
+		rollFlag = true;
+	}
+	if (!rollFlag)
+	{
+		roll = false;
+	}
 
-	}*/
+	zAxis = ToZAxis(mat);
+	quat = quat * CreateRotationQuaternion(roll, zAxis);
+
+	xAxis = ToXAxis(mat);
+	quat = quat * CreateRotationQuaternion(pitch, xAxis);
+
+	yAxis = ToXAxis(mat);
+	quat = quat * CreateRotationQuaternion(yaw, yAxis);
+
+	matRot = QuaternionToMatrix(quat);
+	mat = MMult(mat, matRot);
+	MGetAxis1(xAxis, yAxis, zAxis, pos);
+	//MV1SetMatrix(modelHandle, mat);
+
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)// 上昇.
 	{
 		VECTOR upward = VCross(left, dir);
@@ -102,10 +145,7 @@ void Player::Update(float deltaTime)
 	}
 	pos = prePos;
 	dir = VNorm(dir);
-	MV1SetPosition(modelHandle, this->pos);
-	//MATRIX rotYMat = MGetRotY(180.0f * (DX_PI_F / 180.0f));
-	//VECTOR negativeVec = VTransform(dir, rotYMat);
-	MV1SetRotationZYAxis(modelHandle, dir, zAxsisDir, 0.0f);
+	MV1SetPosition(modelHandle, pos);
 }
 
 void Player::Draw()

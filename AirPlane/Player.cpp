@@ -106,22 +106,28 @@ void Player::Update(float deltaTime)
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);
 
-	matTrans = MGetTranslate(VGet(0.0f, 0.0f, 0.0f));
-	mat = MMult(mat, matTrans);
-	MV1SetMatrix(modelHandle, mat);
+	dir.x = mat.m[0][0]*qu
+	dir.y = quat.y;
+	dir.z = quat.z;
 
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)
 	{
+		velocity = VScale(dir, 10.0f);
 	}
 	
 	if (CheckHitKey(KEY_INPUT_LCONTROL) && VSize(velocity) >= -MaxSpeed)
 	{
 	}
+	pos = VAdd(pos, VScale(velocity, deltaTime));
 
 	prePos = VAdd(pos, VScale(velocity, deltaTime));
 	pos = prePos;
 	dir = VNorm(dir);
-	//MV1SetPosition(modelHandle, pos);
+
+	matTrans = MGetTranslate(pos);
+	mat = MMult(mat, matTrans);
+	MV1SetMatrix(modelHandle, mat);
+https://qiita.com/kenjihiranabe/items/945232fbde58fab45681
 }
 
 void Player::Draw()

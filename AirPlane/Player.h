@@ -29,12 +29,12 @@ private:
     MATRIX mat;
     MATRIX matRot;
     MATRIX matTrans;
-
     float yaw, pitch, roll;
-
     VECTOR xAxis, yAxis, zAxis;
-
     QUATERNION quat;
-    const float ModelScale = 0.05f;
+    const float ModelScale = 0.015f;
+    const float YawSpeed     = 10.0f;
+    const float PitchSpeed   = 10.0f;
+    const float RollSpeed    = 10.0f;
 };
 

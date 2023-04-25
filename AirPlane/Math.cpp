@@ -263,3 +263,4 @@ VECTOR ToZAxis(MATRIX mat)
 {
 	return VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]);
 }
+

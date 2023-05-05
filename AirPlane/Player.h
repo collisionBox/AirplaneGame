@@ -38,4 +38,7 @@ private:
     const float RollSpeed    = 10.0f;
     MATRIX matVelocity;
 };
-
+//http://noa1105.seesaa.net/article/239449116.html
+//http://www.f.waseda.jp/moriya/PUBLIC_HTML/education/classes/infomath6/applet/fractal/coord/
+//http://marupeke296.com/DXG_No39_WorldMatrixInformation.html
+//https://zenn.dev/mebiusbox/books/132b654aa02124/viewer/2966c7

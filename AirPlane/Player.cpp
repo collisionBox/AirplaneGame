@@ -21,7 +21,7 @@ Player::~Player()
 void Player::Init()
 {
 
-	pos = InitVec;
+	pos = VGet(10,10,0);
 	dir = InitDir;
 	dirAdd = InitVec;
 	velocity = InitVec;
@@ -30,12 +30,13 @@ void Player::Init()
 	yaw = pitch = roll = 0.0f;
 	quat.x = quat.y = quat.z = 0.0f;
 	quat.t = 1.0f;
-
-
-
-
+	matRot = QuaternionToMatrix(quat);
+	dir = MtoV(matRot);
+	matVelocity = InitMat;
+	MV1SetScale(modelHandle, VGet(ModelScale, ModelScale, ModelScale));
 	MV1SetPosition(modelHandle, pos);
-	MV1SetRotationZYAxis(modelHandle, dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
+	MV1SetRotationXYZ(modelHandle, dir);
+
 }
 
 void Player::Update(float deltaTime)
@@ -105,29 +106,28 @@ void Player::Update(float deltaTime)
 	quat = quat * CreateRotationQuaternion(roll, zAxis);
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);
-
-	dir.x = mat.m[0][0]*qu
-	dir.y = quat.y;
-	dir.z = quat.z;
-
+	MATRIX matDir = { mat.m[0][0],mat.m[0][1],mat.m[0][2],
+					  mat.m[1][0],mat.m[1][1],mat.m[1][2],
+					  mat.m[2][0],mat.m[2][1],mat.m[2][2] };
+	VECTOR dirX = VGet(mat.m[0][0], mat.m[0][1], mat.m[0][2]);
+	VECTOR dirY = VGet(mat.m[1][0], mat.m[1][1], mat.m[1][2]);
+	VECTOR dirZ = VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]);
+	dir = VGet(VSize(dirX), VSize(dirY), VSize(dirZ));
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)
 	{
-		velocity = VScale(dir, 10.0f);
+		mat = MGetScale(dir);
 	}
 	
 	if (CheckHitKey(KEY_INPUT_LCONTROL) && VSize(velocity) >= -MaxSpeed)
 	{
 	}
-	pos = VAdd(pos, VScale(velocity, deltaTime));
-
+	//MV1SetRotationXYZ(modelHandle, dir);
 	prePos = VAdd(pos, VScale(velocity, deltaTime));
 	pos = prePos;
-	dir = VNorm(dir);
-
 	matTrans = MGetTranslate(pos);
 	mat = MMult(mat, matTrans);
 	MV1SetMatrix(modelHandle, mat);
-https://qiita.com/kenjihiranabe/items/945232fbde58fab45681
+//https://qiita.com/kenjihiranabe/items/945232fbde58fab45681
 }
 
 void Player::Draw()
@@ -136,6 +136,9 @@ void Player::Draw()
 	MV1DrawModel(modelHandle);
 	DrawFormatString(0, 0, white, "%f%f,%f,%f", quat.t, quat.x, quat.y, quat.z);
 	DrawFormatString(0, 20, white, "dir:%f,%f,%f", dir.x, dir.y, dir.z);
+	DrawFormatString(0, 40, white, "  %f %f %f %f\n % f % f % f % f\n % f % f % f % f\n % f % f % f % f",
+		mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[0][3], mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[1][3],
+		mat.m[2][0], mat.m[2][1], mat.m[2][2], mat.m[2][3], mat.m[3][0], mat.m[3][1], mat.m[3][2], mat.m[3][3]);
 }
 
 void Player::OnCollisionEnter(const ObjectBase* other)

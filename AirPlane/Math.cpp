@@ -264,3 +264,39 @@ VECTOR ToZAxis(MATRIX mat)
 	return VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]);
 }
 
+float QSize(QUATERNION in)
+{
+	return sqrtf(in.t * in.t + in.x * in.x + in.y * in.y + in.z * in.z);
+}
+
+QUATERNION QNorm(QUATERNION in)
+{
+	float size;
+	size = QSize(in);
+	QUATERNION ans;
+	ans.t = in.t / size;
+	ans.x = in.x / size;
+	ans.y = in.y / size;
+	ans.z = in.z / size;
+	
+	return ans;
+}
+
+VECTOR QtoV(QUATERNION in)
+{
+	VECTOR result;
+	result.x = in.x;
+	result.y = in.y;
+	result.z = in.z;
+	return result;
+}
+
+VECTOR MtoV(MATRIX mat)
+{
+	VECTOR result;
+	result.x = mat.m[0][0] + mat.m[0][1] + mat.m[0][2];
+	result.y = mat.m[1][0] + mat.m[1][1] + mat.m[1][2];
+	result.z = mat.m[2][0] + mat.m[2][1] + mat.m[2][2];
+	return result;
+}
+

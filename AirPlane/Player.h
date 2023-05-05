@@ -36,5 +36,6 @@ private:
     const float YawSpeed     = 10.0f;
     const float PitchSpeed   = 10.0f;
     const float RollSpeed    = 10.0f;
+    MATRIX matVelocity;
 };
 

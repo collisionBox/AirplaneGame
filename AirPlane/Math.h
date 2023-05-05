@@ -38,6 +38,8 @@ float ToRadian(float degree);
 // @brief ベクトルの大きさを求める.
 float VectorSize(VECTOR& vec);
 
+
+// 参考サイト:http://noa1105.seesaa.net/article/239449116.html
 typedef struct
 {
 	float t;// real.
@@ -64,3 +66,12 @@ VECTOR ToXAxis(MATRIX mat);
 VECTOR ToYAxis(MATRIX mat);
 VECTOR ToZAxis(MATRIX mat);
 
+float QSize(QUATERNION in);
+
+QUATERNION QNorm(QUATERNION in);
+
+VECTOR QtoV(QUATERNION in);// 駄目だ！.
+
+const MATRIX InitMat = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+
+VECTOR MtoV(MATRIX mat);

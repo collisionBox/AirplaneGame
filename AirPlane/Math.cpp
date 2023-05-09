@@ -300,3 +300,12 @@ VECTOR MtoV(MATRIX mat)
 	return result;
 }
 
+MATRIX operator*(MATRIX lhs, MATRIX rhs)
+{
+	return MMult(lhs, rhs);
+}
+MATRIX operator*=(MATRIX lhs, MATRIX rhs)
+{
+	lhs = lhs * rhs;
+	return lhs;
+}

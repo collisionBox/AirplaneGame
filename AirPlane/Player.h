@@ -26,9 +26,11 @@ private:
     const float DefaultDownwardSpeed = -10.0f;// 自然降下速度.
     VECTOR rotate;
 
-    MATRIX mat;
-    MATRIX matRot;
-    MATRIX matTrans;
+    MATRIX mat;// ワールド座標.
+    const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
+    MATRIX matRot;// 回転行列.
+    MATRIX matTrans;// 移動行列.
+    MATRIX matLocal;// ローカル座標.
     float yaw, pitch, roll;
     VECTOR xAxis, yAxis, zAxis;
     QUATERNION quat;
@@ -42,3 +44,4 @@ private:
 //http://www.f.waseda.jp/moriya/PUBLIC_HTML/education/classes/infomath6/applet/fractal/coord/
 //http://marupeke296.com/DXG_No39_WorldMatrixInformation.html
 //https://zenn.dev/mebiusbox/books/132b654aa02124/viewer/2966c7
+//https://yttm-work.jp/gmpg/gmpg_0002.html

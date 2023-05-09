@@ -21,7 +21,7 @@ Player::~Player()
 void Player::Init()
 {
 
-	pos = VGet(10,10,0);
+	pos = VGet(0,5,0);
 	dir = InitDir;
 	dirAdd = InitVec;
 	velocity = InitVec;
@@ -31,7 +31,6 @@ void Player::Init()
 	quat.x = quat.y = quat.z = 0.0f;
 	quat.t = 1.0f;
 	matRot = QuaternionToMatrix(quat);
-	dir = MtoV(matRot);
 	matVelocity = InitMat;
 	MV1SetScale(modelHandle, VGet(ModelScale, ModelScale, ModelScale));
 	MV1SetPosition(modelHandle, pos);
@@ -95,7 +94,6 @@ void Player::Update(float deltaTime)
 	}
 	roll *= deltaTime;
 
-	mat = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// ÉXÉPÅ[Éã.
 	
 	// âÒì]Ç≥ÇπÇÈ.
 	yAxis = ToYAxis(mat);// yaw.
@@ -105,27 +103,33 @@ void Player::Update(float deltaTime)
 	zAxis = ToZAxis(mat);// roll.
 	quat = quat * CreateRotationQuaternion(roll, zAxis);
 	matRot = QuaternionToMatrix(quat);
-	mat = MMult(mat, matRot);
 	MATRIX matDir = { mat.m[0][0],mat.m[0][1],mat.m[0][2],
 					  mat.m[1][0],mat.m[1][1],mat.m[1][2],
 					  mat.m[2][0],mat.m[2][1],mat.m[2][2] };
-	VECTOR dirX = VGet(mat.m[0][0], mat.m[0][1], mat.m[0][2]);
-	VECTOR dirY = VGet(mat.m[1][0], mat.m[1][1], mat.m[1][2]);
-	VECTOR dirZ = VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]);
+	VECTOR dirX = VScale(VGet(mat.m[0][0], mat.m[0][1], mat.m[0][2]), ModelScale);
+	VECTOR dirY = VScale(VGet(mat.m[1][0], mat.m[1][1], mat.m[1][2]), ModelScale);
+	VECTOR dirZ = VScale(VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]), ModelScale);
+
 	dir = VGet(VSize(dirX), VSize(dirY), VSize(dirZ));
+	pos = InitVec;
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)
 	{
-		mat = MGetScale(dir);
+		pos = VGet(5, 5, 5);
+		
 	}
 	
 	if (CheckHitKey(KEY_INPUT_LCONTROL) && VSize(velocity) >= -MaxSpeed)
 	{
 	}
 	//MV1SetRotationXYZ(modelHandle, dir);
-	prePos = VAdd(pos, VScale(velocity, deltaTime));
-	pos = prePos;
+	/*prePos = VAdd(pos, VScale(velocity, deltaTime));
+	pos = prePos;*/
 	matTrans = MGetTranslate(pos);
+	mat = MMult(mat, matScale);
+	mat = MMult(mat, matRot);
 	mat = MMult(mat, matTrans);
+
+	mat = MTranspose(mat);
 	MV1SetMatrix(modelHandle, mat);
 //https://qiita.com/kenjihiranabe/items/945232fbde58fab45681
 }

@@ -75,3 +75,8 @@ VECTOR QtoV(QUATERNION in);// ë ñ⁄ÇæÅI.
 const MATRIX InitMat = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 VECTOR MtoV(MATRIX mat);
+
+// @brief mat * mat
+MATRIX operator*(MATRIX lhs, MATRIX rhs);
+
+MATRIX operator*=(MATRIX lhs, MATRIX rhs);

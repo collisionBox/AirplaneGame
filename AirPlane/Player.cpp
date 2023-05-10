@@ -35,11 +35,14 @@ void Player::Init()
 	MV1SetScale(modelHandle, VGet(ModelScale, ModelScale, ModelScale));
 	MV1SetPosition(modelHandle, pos);
 	MV1SetRotationXYZ(modelHandle, dir);
-
 }
 
 void Player::Update(float deltaTime)
 {
+	// ÉXÉPÅ[Éã.
+	mat = matScale;// á@.
+
+	// âÒì].
 	// ÉàÅ[.
 	bool yawFlag = false;
 	if (CheckHitKey(KEY_INPUT_E))
@@ -94,7 +97,7 @@ void Player::Update(float deltaTime)
 	}
 	roll *= deltaTime;
 
-	
+
 	// âÒì]Ç≥ÇπÇÈ.
 	yAxis = ToYAxis(mat);// yaw.
 	quat = quat * CreateRotationQuaternion(yaw, yAxis);
@@ -103,33 +106,29 @@ void Player::Update(float deltaTime)
 	zAxis = ToZAxis(mat);// roll.
 	quat = quat * CreateRotationQuaternion(roll, zAxis);
 	matRot = QuaternionToMatrix(quat);
-	MATRIX matDir = { mat.m[0][0],mat.m[0][1],mat.m[0][2],
-					  mat.m[1][0],mat.m[1][1],mat.m[1][2],
-					  mat.m[2][0],mat.m[2][1],mat.m[2][2] };
-	VECTOR dirX = VScale(VGet(mat.m[0][0], mat.m[0][1], mat.m[0][2]), ModelScale);
-	VECTOR dirY = VScale(VGet(mat.m[1][0], mat.m[1][1], mat.m[1][2]), ModelScale);
-	VECTOR dirZ = VScale(VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]), ModelScale);
+	mat = MMult(mat, matRot);// áA.
 
-	dir = VGet(VSize(dirX), VSize(dirY), VSize(dirZ));
+	// à⁄ìÆ.
+	VECTOR dirX = ToXAxis(matRot);
+	VECTOR dirY = ToYAxis(matRot);
+	VECTOR dirZ = ToZAxis(matRot);
+
 	pos = InitVec;
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)
 	{
-		pos = VGet(5, 5, 5);
-		
+		pos = VNorm(dirZ) * 10;
 	}
 	
 	if (CheckHitKey(KEY_INPUT_LCONTROL) && VSize(velocity) >= -MaxSpeed)
 	{
 	}
 	//MV1SetRotationXYZ(modelHandle, dir);
-	/*prePos = VAdd(pos, VScale(velocity, deltaTime));
-	pos = prePos;*/
+	prePos = VAdd(pos, VScale(velocity, deltaTime));
+	pos = prePos;
 	matTrans = MGetTranslate(pos);
-	mat = MMult(mat, matScale);
-	mat = MMult(mat, matRot);
-	mat = MMult(mat, matTrans);
-
-	mat = MTranspose(mat);
+	mat = MMult(mat, matTrans);// áB.
+	
+	// îΩâf.
 	MV1SetMatrix(modelHandle, mat);
 //https://qiita.com/kenjihiranabe/items/945232fbde58fab45681
 }

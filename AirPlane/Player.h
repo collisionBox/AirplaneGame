@@ -27,7 +27,6 @@ private:
     VECTOR rotate;
 
     MATRIX mat;// ワールド座標.
-    const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
     MATRIX matRot;// 回転行列.
     MATRIX matTrans;// 移動行列.
     MATRIX matLocal;// ローカル座標.
@@ -39,6 +38,8 @@ private:
     const float PitchSpeed   = 10.0f;
     const float RollSpeed    = 10.0f;
     MATRIX matVelocity;
+    const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
+
 };
 //http://noa1105.seesaa.net/article/239449116.html
 //http://www.f.waseda.jp/moriya/PUBLIC_HTML/education/classes/infomath6/applet/fractal/coord/

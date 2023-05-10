@@ -31,7 +31,7 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 	SetCameraNearFar(0.01f, 99999.0f);
 
 	// ライトを設定.
-	SetLightDirection(VGet(0.0f, -1.0f, 0.0f));
+	int light = ChangeLightTypeDir(VGet(1.0f, -1.0f, 1.0f));
 
 	// マネージャー生成.
 	ObjectManager::Initialize();
@@ -66,7 +66,6 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 	ObjectManager::ReleseAllObj();
 	ObjectManager::Finalize();
 	AssetManager::Finalize();
-
 	DxLib_End();
 	return 0;
 }

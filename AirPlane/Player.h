@@ -38,7 +38,7 @@ private:
     const float PitchSpeed   = 10.0f;
     const float RollSpeed    = 10.0f;
     MATRIX matVelocity;
-    const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
+    const MATRIX matScale = MGetScale(VGet(-ModelScale, ModelScale, -ModelScale));// スケール行列.
 
 };
 //http://noa1105.seesaa.net/article/239449116.html

@@ -141,8 +141,11 @@
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CameraBase.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="HUDCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="ObjectBase.cpp" />
@@ -154,9 +157,12 @@
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CameraBase.h" />
+    <ClInclude Include="CameraManager.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionType.h" />
     <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="HUDCamera.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="ObjectBase.h" />
     <ClInclude Include="ObjectManager.h" />

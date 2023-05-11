@@ -3,14 +3,13 @@
 #include "Math.h"
 #include <algorithm>
 #include <cmath>
-
 using namespace std;
 
 Player::Player() :
 	ObjectBase(ObjectTag::Player)
 {
 	modelHandle = AssetManager::GetMesh("data/player/player.mv1");
-
+	camera = new HUDCamera();
 	Init();
 }
 
@@ -20,7 +19,7 @@ Player::~Player()
 
 void Player::Init()
 {
-
+	camera->Init();
 	pos = VGet(0,5,0);
 	dir = InitDir;
 	dirAdd = InitVec;
@@ -31,7 +30,6 @@ void Player::Init()
 	quat.x = quat.y = quat.z = 0.0f;
 	quat.t = 1.0f;
 	matRot = QuaternionToMatrix(quat);
-	matVelocity = InitMat;
 	MV1SetScale(modelHandle, VGet(ModelScale, ModelScale, ModelScale));
 	MV1SetPosition(modelHandle, pos);
 	MV1SetRotationXYZ(modelHandle, dir);
@@ -113,16 +111,14 @@ void Player::Update(float deltaTime)
 	VECTOR dirY = ToYAxis(matRot);
 	VECTOR dirZ = ToZAxis(matRot);
 
-	pos = InitVec;
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)
 	{
-		pos = VNorm(dirZ) * 10;
+		velocity = VNorm(dirZ) * -UpwardAccel;
 	}
 	
 	if (CheckHitKey(KEY_INPUT_LCONTROL) && VSize(velocity) >= -MaxSpeed)
 	{
 	}
-	//MV1SetRotationXYZ(modelHandle, dir);
 	prePos = VAdd(pos, VScale(velocity, deltaTime));
 	pos = prePos;
 	matTrans = MGetTranslate(pos);
@@ -130,7 +126,9 @@ void Player::Update(float deltaTime)
 	
 	// ”½‰f.
 	MV1SetMatrix(modelHandle, mat);
-//https://qiita.com/kenjihiranabe/items/945232fbde58fab45681
+
+	// ƒJƒƒ‰.
+	camera->Update(pos, matRot, deltaTime);
 }
 
 void Player::Draw()

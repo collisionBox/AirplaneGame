@@ -1,8 +1,11 @@
 #pragma once
 #include "ObjectBase.h"
+#include "HUDCamera.h"
+
 class Player :
     public ObjectBase
-{public:
+{
+public:
     Player();
     ~Player();
     void Init();
@@ -10,7 +13,7 @@ class Player :
     void Draw()override;
     void OnCollisionEnter(const ObjectBase* other);
 private:
-
+    HUDCamera* camera;
     VECTOR velocity; // 速度[m/s].
     VECTOR dirAdd;
     VECTOR zAxsisDir;
@@ -37,8 +40,7 @@ private:
     const float YawSpeed     = 10.0f;
     const float PitchSpeed   = 10.0f;
     const float RollSpeed    = 10.0f;
-    MATRIX matVelocity;
-    const MATRIX matScale = MGetScale(VGet(-ModelScale, ModelScale, -ModelScale));// スケール行列.
+    const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
 
 };
 //http://noa1105.seesaa.net/article/239449116.html

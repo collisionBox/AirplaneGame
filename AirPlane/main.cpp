@@ -41,8 +41,8 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 	Player* player = new Player;
 	ObjectManager::Entry(player);
 
-	PlayerCamera* camera = new PlayerCamera;
-	ObjectManager::Entry(camera);
+	/*PlayerCamera* camera = new PlayerCamera;
+	ObjectManager::Entry(camera);*/
 	
 
 	

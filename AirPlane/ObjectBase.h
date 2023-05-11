@@ -24,7 +24,7 @@ public:
 
 	float GetHP() const { return AP; }// 装甲値の取得.
 
-	virtual void Update(float deltaTime) = 0;  // ゲームオブジェクト更新処理
+	virtual void Update(float deltaTime) {};  // ゲームオブジェクト更新処理
 	virtual void Draw() {};// ゲームオブジェクト描画
 	ObjectTag GetTag() const { return tag; } // ゲームオブジェクトの種類取得
 

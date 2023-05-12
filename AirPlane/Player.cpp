@@ -11,6 +11,8 @@ Player::Player() :
 	modelHandle = AssetManager::GetMesh("data/player/player.mv1");
 	camera = new HUDCamera();
 	Init();
+	bullet = new Bullet(ObjectTag::Player);
+
 }
 
 Player::~Player()
@@ -19,20 +21,22 @@ Player::~Player()
 
 void Player::Init()
 {
-	camera->Init();
-	pos = VGet(0,5,0);
-	dir = InitDir;
-	dirAdd = InitVec;
-	velocity = InitVec;
-	rotate = InitVec;
+
+	mat = mat = matScale;
 
 	yaw = pitch = roll = 0.0f;
 	quat.x = quat.y = quat.z = 0.0f;
 	quat.t = 1.0f;
 	matRot = QuaternionToMatrix(quat);
-	MV1SetScale(modelHandle, VGet(ModelScale, ModelScale, ModelScale));
-	MV1SetPosition(modelHandle, pos);
-	MV1SetRotationXYZ(modelHandle, dir);
+	mat = MMult(mat, matRot);
+
+	pos = InitPos;
+	velocity = InitVec;
+	mat = MMult(mat, matRot);
+
+	camera->Init(pos, matRot);
+	speed = NomalSpeed;
+	velocity = VNorm(ToZAxis(matRot)) * -speed;
 }
 
 void Player::Update(float deltaTime)
@@ -41,6 +45,25 @@ void Player::Update(float deltaTime)
 	mat = matScale;// á@.
 
 	// âÒì].
+	Rotate(deltaTime);
+
+	// à⁄ìÆ.
+	Movement(deltaTime);
+
+	// îΩâf.
+	MV1SetMatrix(modelHandle, mat);
+
+	// ÉJÉÅÉâ.
+	camera->Update(pos, matRot, deltaTime);
+
+	if (CheckHitKey(KEY_INPUT_SPACE))
+	{
+
+	}
+}
+
+void Player::Rotate(float deltaTime)
+{
 	// ÉàÅ[.
 	bool yawFlag = false;
 	if (CheckHitKey(KEY_INPUT_E))
@@ -81,12 +104,12 @@ void Player::Update(float deltaTime)
 	bool rollFlag = false;
 	if (CheckHitKey(KEY_INPUT_A))
 	{
-		roll = RollSpeed;
+		roll = -RollSpeed;
 		rollFlag = true;
 	}
 	if (CheckHitKey(KEY_INPUT_D))
 	{
-		roll = -RollSpeed;
+		roll = RollSpeed;
 		rollFlag = true;
 	}
 	if (!rollFlag)
@@ -94,7 +117,6 @@ void Player::Update(float deltaTime)
 		roll = 0.0f;
 	}
 	roll *= deltaTime;
-
 
 	// âÒì]Ç≥ÇπÇÈ.
 	yAxis = ToYAxis(mat);// yaw.
@@ -106,40 +128,55 @@ void Player::Update(float deltaTime)
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);// áA.
 
-	// à⁄ìÆ.
-	VECTOR dirX = ToXAxis(matRot);
-	VECTOR dirY = ToYAxis(matRot);
-	VECTOR dirZ = ToZAxis(matRot);
+}
 
-	if (CheckHitKey(KEY_INPUT_LSHIFT) && VSize(velocity) <= MaxSpeed)
+void Player::Movement(float deltaTime)
+{
+	// â¡ë¨.
+	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)
 	{
-		velocity = VNorm(dirZ) * -UpwardAccel;
+		speed += Acceleration;
 	}
-	
-	if (CheckHitKey(KEY_INPUT_LCONTROL) && VSize(velocity) >= -MaxSpeed)
+	// å∏ë¨.
+	else if (CheckHitKey(KEY_INPUT_LCONTROL) && speed >= StallSpeed)
 	{
+		speed -= Deceleration;
 	}
-	prePos = VAdd(pos, VScale(velocity, deltaTime));
+	// í èÌë¨ìxÇ÷ñﬂÇ∑.
+	else if (!CheckHitKey(KEY_INPUT_LSHIFT) && !CheckHitKey(KEY_INPUT_LCONTROL))
+	{
+		if (speed <= NomalSpeed)
+		{
+			speed += Acceleration;
+			if (speed > NomalSpeed)
+			{
+				speed = NomalSpeed;
+			}
+		}
+		else if (speed >= NomalSpeed)
+		{
+			speed -= Deceleration;
+			if (speed < NomalSpeed)
+			{
+				speed = NomalSpeed;
+			}
+		}
+	}
+	// îΩâf.
+	velocity = VNorm(ToZAxis(matRot)) * -speed;
+	prePos += velocity * deltaTime;
 	pos = prePos;
 	matTrans = MGetTranslate(pos);
 	mat = MMult(mat, matTrans);// áB.
-	
-	// îΩâf.
-	MV1SetMatrix(modelHandle, mat);
-
-	// ÉJÉÅÉâ.
-	camera->Update(pos, matRot, deltaTime);
 }
+
 
 void Player::Draw()
 {
 	int white = GetColor(255, 255, 255);
 	MV1DrawModel(modelHandle);
-	DrawFormatString(0, 0, white, "%f%f,%f,%f", quat.t, quat.x, quat.y, quat.z);
+	DrawFormatString(0, 0, white, "%f:%f", VSize(velocity), speed);
 	DrawFormatString(0, 20, white, "dir:%f,%f,%f", dir.x, dir.y, dir.z);
-	DrawFormatString(0, 40, white, "  %f %f %f %f\n % f % f % f % f\n % f % f % f % f\n % f % f % f % f",
-		mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[0][3], mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[1][3],
-		mat.m[2][0], mat.m[2][1], mat.m[2][2], mat.m[2][3], mat.m[3][0], mat.m[3][1], mat.m[3][2], mat.m[3][3]);
 }
 
 void Player::OnCollisionEnter(const ObjectBase* other)

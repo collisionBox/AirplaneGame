@@ -10,6 +10,7 @@ public:
     Bullet(ObjectTag tag);
     Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag);
     ~Bullet();
+    void Init(VECTOR pos, VECTOR dir);
     void Update(float deltaTime);
     void OnCollisionEnter(const ObjectBase* other) override;
     void Draw();

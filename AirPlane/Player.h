@@ -1,7 +1,7 @@
 #pragma once
 #include "ObjectBase.h"
 #include "HUDCamera.h"
-
+#include "Bullet.h"
 class Player :
     public ObjectBase
 {
@@ -13,22 +13,22 @@ public:
     void Draw()override;
     void OnCollisionEnter(const ObjectBase* other);
 private:
+    void Rotate(float deltaTime);
+    void Movement(float deltaTime);
+
     HUDCamera* camera;
+    Bullet* bullet;
     VECTOR velocity; // 速度[m/s].
-    VECTOR dirAdd;
-    VECTOR zAxsisDir;
-    const float UpwardAccel = 8.0f;
+    const float Acceleration = 36.0f;// 加速度.
+    const float MaxSpeed = 2575.0f;// 最高速度.
+    const float Deceleration = 20.0f;// 減速度.
+    const float StallSpeed = 220.0f;// 失速速度.
+    const float NomalSpeed = 600.0f;// 通常速度.
+    float speed;
     const float DefaultUpwardAccel = 5.0f;
     const float DownwardAccel = 8.0f;
     const float DefaultDownwardAccel = 5.0f;
-    const float MaxUpVec = 100.0f;
-    const float MaxPower = 100.0f;
-    const float Gravity = 9.80665f;
-    const VECTOR InitDir = VGet(0.0f, 0.0f, -1.0f);
-    const float MaxSpeed = 40.0f;
-    const float DefaultDownwardSpeed = -10.0f;// 自然降下速度.
-    VECTOR rotate;
-
+    const VECTOR InitPos = VGet(0.0f, 100.0f, 0.0f);// 初期位置.
     MATRIX mat;// ワールド座標.
     MATRIX matRot;// 回転行列.
     MATRIX matTrans;// 移動行列.
@@ -37,9 +37,9 @@ private:
     VECTOR xAxis, yAxis, zAxis;
     QUATERNION quat;
     const float ModelScale = 0.015f;
-    const float YawSpeed     = 10.0f;
-    const float PitchSpeed   = 10.0f;
-    const float RollSpeed    = 10.0f;
+    const float YawSpeed     = 1.05f;
+    const float PitchSpeed   = 1.6f;
+    const float RollSpeed    = 1.8f;
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
 
 };

@@ -9,22 +9,6 @@ Bullet::Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag) :
 	// アセットマネージャーからモデルをロード.
 	modelHandle = AssetManager::GetMesh("data/beam.mv1");
 	MV1SetScale(modelHandle, VGet(0.1f, 0.1f, 0.08f));// サイズの変更.
-	// 位置・方向を初期化.
-	this->pos = pos;
-	this->dir = dir;
-	this->pos = VAdd(this->pos ,VScale(this->dir, barrelHead));// 砲塔先頭にセットするため.
-
-	MV1SetPosition(modelHandle, this->pos);
-	MV1SetRotationZYAxis(modelHandle, this->dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
-
-	// 当たり判定球セット.
-	colType = CollisionType::Sphere;
-	colSphere.worldCenter = pos;
-	colSphere.radius = colRadius;
-	CollisionUpdate();
-	// 変数の初期化.
-	velocity = InitVec;
-	reflectionFlag = false;
 	myTag = userTag;
 
 
@@ -36,10 +20,32 @@ Bullet::~Bullet()
 
 }
 
+void Bullet::Init(VECTOR pos, VECTOR dir)
+{
+	// 位置・方向を初期化.
+	this->pos = pos;
+	this->dir = dir;
+
+	MV1SetPosition(modelHandle, this->pos);
+	MV1SetRotationZYAxis(modelHandle, this->dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
+
+	// 当たり判定球セット.
+	colType = CollisionType::Sphere;
+	colSphere.worldCenter = pos;
+	colSphere.radius = colRadius;
+	CollisionUpdate();
+
+	// 変数の初期化.
+	velocity = InitVec;
+	reflectionFlag = false;
+
+
+}
+
 void Bullet::Update(float deltaTime)
 {
-	velocity = VScale(VScale(dir, speed), deltaTime);
-	prePos = VAdd(pos, velocity);
+	velocity += dir * speed * deltaTime;
+	prePos += velocity;
 
 	if (offscreenDicision(pos))
 	{

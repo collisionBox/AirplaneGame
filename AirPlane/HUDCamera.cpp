@@ -2,24 +2,24 @@
 #include "Math.h"
 HUDCamera::HUDCamera()
 {
-	Init();
 }
 
 HUDCamera::~HUDCamera()
 {
 }
 
-void HUDCamera::Init()
+void HUDCamera::Init(VECTOR pos, MATRIX matRot)
 {
-	SetCameraPositionAndTarget_UpVecY(pos, targetPos);
+	this->pos = pos + VNorm(ToZAxis(matRot)) * OffsetLen + VNorm(ToYAxis(matRot)) * OffsetY;
+	targetPos = pos;
+	SetCameraPositionAndTargetAndUpVec(this->pos, targetPos, VNorm(ToYAxis(matRot)));
 }
 
 void HUDCamera::Update(VECTOR pos, MATRIX matRot, float deltaTime)
 {
+
+	this->pos = pos + VNorm(ToZAxis(matRot)) * OffsetLen + VNorm(ToYAxis(matRot)) * OffsetY;
 	targetPos = pos;
-	VECTOR targetDir = VNorm(ToZAxis(matRot));
-	targetDir.y = 0;
-	this->pos = targetDir * OffsetLen;
-	pos.y = pos.y + OffsetY;
-	SetCameraPositionAndTarget_UpVecY(this->pos, targetPos);
+	SetCameraPositionAndTargetAndUpVec(this->pos, targetPos, VNorm(ToYAxis(matRot)));
+	
 }

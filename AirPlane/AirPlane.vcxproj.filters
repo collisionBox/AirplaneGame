@@ -28,6 +28,12 @@
     <Filter Include="ソース ファイル\Scene">
       <UniqueIdentifier>{e72d79e5-21e9-492f-91e3-86306a8634fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Object\Camera">
+      <UniqueIdentifier>{d3c474ad-7bfa-403d-b2ed-f2b6f15e7705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Object\Camera\Base">
+      <UniqueIdentifier>{41db53ce-02d9-412b-a30f-9a07fd858449}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp">
@@ -61,16 +67,16 @@
       <Filter>ソース ファイル\Object\Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerCamera.cpp">
-      <Filter>ソース ファイル\Object\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraBase.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Object\Camera</Filter>
     </ClCompile>
     <ClCompile Include="HUDCamera.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Object\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraBase.cpp">
+      <Filter>ソース ファイル\Object\Camera\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>ソース ファイル\Object\Camera\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,20 +116,20 @@
     <ClInclude Include="SceneManager.h">
       <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerCamera.h">
-      <Filter>ソース ファイル\Object\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ソース ファイル\Object\Player</Filter>
     </ClInclude>
+    <ClInclude Include="HUDCamera.h">
+      <Filter>ソース ファイル\Object\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCamera.h">
+      <Filter>ソース ファイル\Object\Camera</Filter>
+    </ClInclude>
     <ClInclude Include="CameraManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Object\Camera\Base</Filter>
     </ClInclude>
     <ClInclude Include="CameraBase.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="HUDCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Object\Camera\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

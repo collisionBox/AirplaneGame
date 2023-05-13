@@ -53,7 +53,7 @@ void Bullet::Update(float deltaTime)
 		{
 			bullet[i].pos = prePos;
 		}
-	}
+	}https://bituse.info/game/shot/10
 
 	// à íuÇÃçXêV.
 	MATRIX rotYMat = MGetRotY(180.0f * (float)(DX_PI_F / 180.0f));

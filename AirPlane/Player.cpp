@@ -12,11 +12,13 @@ Player::Player() :
 	camera = new HUDCamera();
 	Init();
 	bullet = new Bullet(ObjectTag::Player);
-
+		
 }
 
 Player::~Player()
 {
+	delete camera;
+	delete bullet;
 }
 
 void Player::Init()
@@ -34,9 +36,12 @@ void Player::Init()
 	velocity = InitVec;
 	mat = MMult(mat, matRot);
 
-	camera->Init(pos, matRot);
 	speed = NomalSpeed;
 	velocity = VNorm(ToZAxis(matRot)) * -speed;
+
+	camera->Init(pos, matRot);
+	bullet->Init(pos, ToZAxis(matRot));
+
 }
 
 void Player::Update(float deltaTime)

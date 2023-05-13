@@ -78,6 +78,9 @@
     <ClCompile Include="CameraManager.cpp">
       <Filter>ソース ファイル\Object\Camera\Base</Filter>
     </ClCompile>
+    <ClCompile Include="BulletManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="CameraBase.h">
       <Filter>ソース ファイル\Object\Camera\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletManager.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

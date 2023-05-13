@@ -263,12 +263,3 @@ VECTOR PlaneNormal(const MV1_COLL_RESULT_POLY_DIM& collisionInfo)
 }
 
 
-bool offscreenDicision(VECTOR pos, float radius)
-{
-	//if (ConvWorldPosToScreenPos(pos).x - radius < 0 || ConvWorldPosToScreenPos(pos).x + radius > ScreenSizeX ||
-	//	ConvWorldPosToScreenPos(pos).y - radius < 0 || ConvWorldPosToScreenPos(pos).y + radius > ScreenSizeY)
-	//{
-	//	return true;
-	//}
-	return false;
-}

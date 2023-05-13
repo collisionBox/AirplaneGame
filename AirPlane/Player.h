@@ -2,6 +2,7 @@
 #include "ObjectBase.h"
 #include "HUDCamera.h"
 #include "Bullet.h"
+#include <memory>
 class Player :
     public ObjectBase
 {
@@ -18,6 +19,9 @@ private:
 
     HUDCamera* camera;
     Bullet* bullet;
+    const int MaxBulletsNum = 20;
+
+
     VECTOR velocity; // ë¨ìx[m/s].
     const float Acceleration = 36.0f;// â¡ë¨ìx.
     const float MaxSpeed = 2575.0f;// ç≈çÇë¨ìx.

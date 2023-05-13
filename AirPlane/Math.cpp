@@ -249,16 +249,19 @@ MATRIX QuaternionToMatrix(QUATERNION q)
 	return mat;
 }
 
+// @brief マトリックスをX軸方向ベクトルに変換する
 VECTOR ToXAxis(MATRIX mat)
 {
 	return VGet(mat.m[0][0], mat.m[0][1], mat.m[0][2]);
 }
 
+// @brief マトリックスをY軸方向ベクトルに変換する
 VECTOR ToYAxis(MATRIX mat)
 {
 	return VGet(mat.m[1][0], mat.m[1][1], mat.m[1][2]);
 }
 
+// @brief マトリックスをZ軸方向ベクトルに変換する
 VECTOR ToZAxis(MATRIX mat)
 {
 	return VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]);

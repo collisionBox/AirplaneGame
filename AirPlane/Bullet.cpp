@@ -11,6 +11,11 @@ Bullet::Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag) :
 	MV1SetScale(modelHandle, VGet(0.1f, 0.1f, 0.08f));// サイズの変更.
 	myTag = userTag;
 
+	// 当たり判定球セット.
+	colType = CollisionType::Sphere;
+	colSphere.worldCenter = pos;
+	colSphere.radius = ColRadius;
+	CollisionUpdate();
 
 }
 
@@ -22,52 +27,73 @@ Bullet::~Bullet()
 
 void Bullet::Init(VECTOR pos, VECTOR dir)
 {
-	// 位置・方向を初期化.
-	this->pos = pos;
-	this->dir = dir;
-
-	MV1SetPosition(modelHandle, this->pos);
-	MV1SetRotationZYAxis(modelHandle, this->dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
-
-	// 当たり判定球セット.
-	colType = CollisionType::Sphere;
-	colSphere.worldCenter = pos;
-	colSphere.radius = colRadius;
-	CollisionUpdate();
-
 	// 変数の初期化.
-	velocity = InitVec;
-	reflectionFlag = false;
-
-
+	for (int i = 0; i < MaxBulletNum; i++)
+	{
+		bullet[i].aliveFlag = false;
+		bullet[i].mh = modelHandle;
+		bullet[i].pos = bullet[i].prePos =
+			bullet[i].dir = bullet[i].velocity = InitVec;
+		
+	}
+	
 }
 
 void Bullet::Update(float deltaTime)
 {
-	velocity += dir * speed * deltaTime;
-	prePos += velocity;
-
-	if (offscreenDicision(pos))
+	for (int i = 0; i < MaxBulletNum; i++)
 	{
-		SetVisible(false);
+		if (bullet[i].aliveFlag)
+		{
+			bullet[i].velocity += dir * Speed;
+			bullet[i].prePos += bullet[i].velocity * deltaTime;
+		}
+		CollisionUpdate(prePos);
+		if (bullet[i].aliveFlag)
+		{
+			bullet[i].pos = prePos;
+		}
 	}
 
-	CollisionUpdate(prePos);
-
-	pos = prePos;
 	// 位置の更新.
-	MV1SetPosition(modelHandle, pos);
 	MATRIX rotYMat = MGetRotY(180.0f * (float)(DX_PI_F / 180.0f));
 	VECTOR negativeVec = VTransform(dir, rotYMat);
+	MV1SetPosition(modelHandle, pos);
 	MV1SetRotationZYAxis(modelHandle, negativeVec, VGet(0.0f, 1.0f, 0.0f), 0.0f);
 
+}
+
+void Bullet::Generate(VECTOR pos, VECTOR dir)
+{
+	for (int i = 0; i < MaxBulletNum; i++)
+	{
+		if (!bullet[i].aliveFlag)
+		{
+			bullet[i].pos = pos;
+			bullet[i].dir = dir;
+			bullet[i].aliveFlag = true;
+			MV1SetPosition(modelHandle, bullet[i].pos);
+			MV1SetRotationZYAxis(modelHandle, bullet[i].dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
+			break;
+		}
+		
+
+	}
 }
 
 
 void Bullet::Draw()
 {
-	MV1DrawModel(modelHandle);
-	DrawCollider();
+	for (int i = 0; i < MaxBulletNum; i++)
+	{
+		if (bullet[i].aliveFlag)
+		{
+			MV1DrawModel(bullet[i].mh);
+			DrawCollider();
+		}
+		
+
+	}
 	
 }
 

@@ -3,6 +3,25 @@
 #include "AssetManager.h"
 
 
+Bullet::Bullet(ObjectTag userTag) :
+	ObjectBase(userTag)
+{
+	// アセットマネージャーからモデルをロード.
+	modelHandle = AssetManager::GetMesh("data/beam.mv1");
+	MV1SetScale(modelHandle, VGet(0.1f, 0.1f, 0.08f));// サイズの変更.
+	myTag = userTag;
+	velocity = InitVec;
+	visible = false;
+	permitUpdate = false;
+
+	// 当たり判定球セット.
+	colType = CollisionType::Sphere;
+	colSphere.worldCenter = pos;
+	colSphere.radius = ColRadius;
+	CollisionUpdate();
+
+}
+
 Bullet::Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag) :
 	ObjectBase(ObjectTag::Bullet)
 {
@@ -10,6 +29,8 @@ Bullet::Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag) :
 	modelHandle = AssetManager::GetMesh("data/beam.mv1");
 	MV1SetScale(modelHandle, VGet(0.1f, 0.1f, 0.08f));// サイズの変更.
 	myTag = userTag;
+	velocity = InitVec;
+	visible = false;
 
 	// 当たり判定球セット.
 	colType = CollisionType::Sphere;
@@ -22,79 +43,49 @@ Bullet::Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag) :
 Bullet::~Bullet()
 {
 	AssetManager::DeleteMesh(modelHandle);
-
+	alive = false;
 }
 
 void Bullet::Init(VECTOR pos, VECTOR dir)
 {
 	// 変数の初期化.
-	for (int i = 0; i < MaxBulletNum; i++)
-	{
-		bullet[i].aliveFlag = false;
-		bullet[i].mh = modelHandle;
-		bullet[i].pos = bullet[i].prePos =
-			bullet[i].dir = bullet[i].velocity = InitVec;
-		
-	}
-	
+	this->pos = pos;
+	this->dir = dir;
+	visible = false;
+	permitUpdate = false;
+
+
 }
 
 void Bullet::Update(float deltaTime)
 {
-	for (int i = 0; i < MaxBulletNum; i++)
+	velocity = dir * Speed * deltaTime;
+	if (visible)
 	{
-		if (bullet[i].aliveFlag)
-		{
-			bullet[i].velocity += dir * Speed;
-			bullet[i].prePos += bullet[i].velocity * deltaTime;
-		}
-		CollisionUpdate(prePos);
-		if (bullet[i].aliveFlag)
-		{
-			bullet[i].pos = prePos;
-		}
-	}https://bituse.info/game/shot/10
-
+		prePos += velocity;
+	}
+	CollisionUpdate(prePos);
 	// 位置の更新.
 	MATRIX rotYMat = MGetRotY(180.0f * (float)(DX_PI_F / 180.0f));
 	VECTOR negativeVec = VTransform(dir, rotYMat);
 	MV1SetPosition(modelHandle, pos);
 	MV1SetRotationZYAxis(modelHandle, negativeVec, VGet(0.0f, 1.0f, 0.0f), 0.0f);
-
+	アップデートを許可制にしたがまだどう変更するか（セッターにするか、オブジェクトごとにするか）まだ考え中.
 }
 
 void Bullet::Generate(VECTOR pos, VECTOR dir)
 {
-	for (int i = 0; i < MaxBulletNum; i++)
-	{
-		if (!bullet[i].aliveFlag)
-		{
-			bullet[i].pos = pos;
-			bullet[i].dir = dir;
-			bullet[i].aliveFlag = true;
-			MV1SetPosition(modelHandle, bullet[i].pos);
-			MV1SetRotationZYAxis(modelHandle, bullet[i].dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
-			break;
-		}
-		
-
-	}
+	this->pos = pos;
+	this->dir = dir;
+	visible = true;
+	permitUpdate = true;
 }
 
 
 void Bullet::Draw()
 {
-	for (int i = 0; i < MaxBulletNum; i++)
-	{
-		if (bullet[i].aliveFlag)
-		{
-			MV1DrawModel(bullet[i].mh);
-			DrawCollider();
-		}
-		
-
-	}
-	
+	MV1DrawModel(modelHandle);
+	DrawCollider();
 }
 
 void Bullet::OnCollisionEnter(const ObjectBase* other)

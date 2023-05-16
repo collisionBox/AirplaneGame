@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "AssetManager.h"
+#include "ObjectManager.h"
 #include "Math.h"
 #include <algorithm>
 #include <cmath>
@@ -10,8 +11,8 @@ Player::Player() :
 {
 	modelHandle = AssetManager::GetMesh("data/player/player.mv1");
 	camera = new HUDCamera();
+	bullet = new BulletManager(ObjectTag::Player);
 	Init();
-	bullet = new Bullet(ObjectTag::Player);
 		
 }
 
@@ -40,7 +41,7 @@ void Player::Init()
 	velocity = VNorm(ToZAxis(matRot)) * -speed;
 
 	camera->Init(pos, matRot);
-	bullet->Init(pos, ToZAxis(matRot));
+	bullet->Init();
 
 }
 
@@ -58,13 +59,14 @@ void Player::Update(float deltaTime)
 	// ”½‰f.
 	MV1SetMatrix(modelHandle, mat);
 
+	// ŽËŒ‚.
+	BulletFire(deltaTime);
+
 	// ƒJƒƒ‰.
 	camera->Update(pos, matRot, deltaTime);
 
-	if (CheckHitKey(KEY_INPUT_SPACE))
-	{
+	
 
-	}
 }
 
 void Player::Rotate(float deltaTime)
@@ -173,6 +175,15 @@ void Player::Movement(float deltaTime)
 	pos = prePos;
 	matTrans = MGetTranslate(pos);
 	mat = MMult(mat, matTrans);// ‡B.
+}
+
+void Player::BulletFire(float deltaTime)
+{
+	if (CheckHitKey(KEY_INPUT_SPACE))
+	{
+		bullet->Generater(pos, ToZAxis(matRot));
+	}
+	
 }
 
 

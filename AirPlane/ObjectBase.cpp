@@ -11,6 +11,7 @@ ObjectBase::ObjectBase(ObjectTag tag)
 	, modelHandle(-1)
 	, visible(true)
 	, alive(true)
+	, permitUpdate(true)
 {
 
 }
@@ -23,6 +24,7 @@ ObjectBase::ObjectBase(ObjectTag tag, VECTOR pos)
 	, modelHandle(-1)
 	, alive(true)
 	, visible(true)
+	, permitUpdate(true)
 {
 	
 	this->pos = pos;

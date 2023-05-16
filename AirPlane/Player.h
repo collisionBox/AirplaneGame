@@ -1,7 +1,7 @@
 #pragma once
 #include "ObjectBase.h"
 #include "HUDCamera.h"
-#include "Bullet.h"
+#include "BulletManager.h"
 #include <memory>
 class Player :
     public ObjectBase
@@ -16,9 +16,10 @@ public:
 private:
     void Rotate(float deltaTime);
     void Movement(float deltaTime);
+    void BulletFire(float deltaTime);
 
     HUDCamera* camera;
-    Bullet* bullet;
+    BulletManager* bullet;
     const int MaxBulletsNum = 20;
 
 

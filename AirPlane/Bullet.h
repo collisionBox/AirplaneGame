@@ -6,8 +6,7 @@ class Bullet :
     public ObjectBase
 {
 public:
-    
-    Bullet(ObjectTag tag);
+    Bullet(ObjectTag userTag);
     Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag);
     ~Bullet();
     void Init(VECTOR pos, VECTOR dir);
@@ -18,18 +17,8 @@ public:
 
 
 private:
-    struct BULLET
-    {
-        VECTOR pos;// 位置ベクトル.
-        VECTOR prePos;// 予想位置ベクトル.
-        VECTOR dir;// 方向ベクトル.
-        bool aliveFlag;// 生きているかどうか.
-        int mh;// モデルハンドル.
-        VECTOR velocity;// 弾速ベクトル.
-
-    }bullet[20];
     ObjectTag myTag;
-    const float MaxBulletNum = 20;// 弾の同時処理最大数.
+    VECTOR velocity;
     const float ColRadius = 10.0f;// 当たり判定半径.
     const float BarrelHead = 85.0f;// 砲身先端.
     const float Speed = 800.0f;// 弾速.

@@ -22,6 +22,8 @@ public:
 
 	bool GetAlive() const { return alive; }// ゲームオブジェクト生きているか 
 
+	bool GetPermitUpdate() const { return permitUpdate; }// Updateの許可状態の取得.
+
 	float GetHP() const { return AP; }// 装甲値の取得.
 
 	virtual void Update(float deltaTime) {};  // ゲームオブジェクト更新処理
@@ -56,6 +58,7 @@ protected:
 	int modelHandle;// モデルハンドル.
 	bool visible;// 表示するかどうかのハンドル（何もしなければ表示）.
 	bool alive;// 生きているかどうかのハンドル.
+	bool permitUpdate;// updateすることを許可するかどうか.
 	float AP;// 残りの装甲地(AP).
 
 	// 当たり判定関連.

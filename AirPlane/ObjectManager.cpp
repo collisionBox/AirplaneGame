@@ -113,7 +113,10 @@ void ObjectManager::Update(float deltaTime)
 		// 該当タグにあるすべてのオブジェクトを更新
 		for (int i = 0; i < Instance->objects[tag].size(); ++i)
 		{
- 			Instance->objects[tag][i]->Update(deltaTime);
+			if (Instance->objects[tag][i]->GetPermitUpdate())
+			{
+				Instance->objects[tag][i]->Update(deltaTime);
+			}
 		}
 	}
 	// ペンディング中のオブジェクトをアクティブリストに追加
@@ -160,7 +163,6 @@ void ObjectManager::Draw()
 			// 描画可能なオブジェクトのみ描画.
 			if (Instance->objects[tag][i]->GetVisible())
 			{
-				
 				Instance->objects[tag][i]->Draw();
 			}
 		}
@@ -183,10 +185,14 @@ void ObjectManager::Collition()
 				{
 					for (int j = 0; j < Instance->objects[tagB].size(); ++j)
 					{
-						Instance->objects[tagA][i]->
-							OnCollisionEnter(Instance->objects[tagB][j]);
-						Instance->objects[tagB][j]->
-							OnCollisionEnter(Instance->objects[tagA][i]);
+						if (Instance->objects[tagA][i]->GetPermitUpdate() && Instance->objects[tagB][i]->GetPermitUpdate())
+						{
+							Instance->objects[tagA][i]->
+								OnCollisionEnter(Instance->objects[tagB][j]);
+							Instance->objects[tagB][j]->
+								OnCollisionEnter(Instance->objects[tagA][i]);
+						}
+						
 					}
 				}
 			}

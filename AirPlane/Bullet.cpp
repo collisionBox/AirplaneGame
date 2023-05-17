@@ -4,33 +4,15 @@
 
 
 Bullet::Bullet(ObjectTag userTag) :
-	ObjectBase(userTag)
-{
-	// アセットマネージャーからモデルをロード.
-	modelHandle = AssetManager::GetMesh("data/beam.mv1");
-	MV1SetScale(modelHandle, VGet(0.1f, 0.1f, 0.08f));// サイズの変更.
-	myTag = userTag;
-	velocity = InitVec;
-	visible = false;
-	permitUpdate = false;
-
-	// 当たり判定球セット.
-	colType = CollisionType::Sphere;
-	colSphere.worldCenter = pos;
-	colSphere.radius = ColRadius;
-	CollisionUpdate();
-
-}
-
-Bullet::Bullet(VECTOR pos, VECTOR dir, ObjectTag userTag) :
 	ObjectBase(ObjectTag::Bullet)
 {
 	// アセットマネージャーからモデルをロード.
 	modelHandle = AssetManager::GetMesh("data/beam.mv1");
-	MV1SetScale(modelHandle, VGet(0.1f, 0.1f, 0.08f));// サイズの変更.
+	MV1SetScale(modelHandle, VGet(0.001f, 0.001f, 0.001f));// サイズの変更.
 	myTag = userTag;
 	velocity = InitVec;
 	visible = false;
+	permitUpdate = false;
 
 	// 当たり判定球セット.
 	colType = CollisionType::Sphere;
@@ -51,32 +33,38 @@ void Bullet::Init(VECTOR pos, VECTOR dir)
 	// 変数の初期化.
 	this->pos = pos;
 	this->dir = dir;
+	velocity = InitVec;
 	visible = false;
 	permitUpdate = false;
-
+	timeCount = DeadTime;
+	CollisionUpdate();
 
 }
 
 void Bullet::Update(float deltaTime)
 {
 	velocity = dir * Speed * deltaTime;
-	if (visible)
-	{
-		prePos += velocity;
-	}
+	//prePos += velocity;
 	CollisionUpdate(prePos);
+	pos = prePos;
 	// 位置の更新.
 	MATRIX rotYMat = MGetRotY(180.0f * (float)(DX_PI_F / 180.0f));
 	VECTOR negativeVec = VTransform(dir, rotYMat);
 	MV1SetPosition(modelHandle, pos);
 	MV1SetRotationZYAxis(modelHandle, negativeVec, VGet(0.0f, 1.0f, 0.0f), 0.0f);
-	アップデートを許可制にしたがまだどう変更するか（セッターにするか、オブジェクトごとにするか）まだ考え中.
+	timeCount -= deltaTime;
+	if (timeCount <= 0)
+	{
+		visible = false;
+		permitUpdate = false;
+	}
 }
 
 void Bullet::Generate(VECTOR pos, VECTOR dir)
 {
 	this->pos = pos;
 	this->dir = dir;
+	timeCount = DeadTime;
 	visible = true;
 	permitUpdate = true;
 }
@@ -85,6 +73,9 @@ void Bullet::Generate(VECTOR pos, VECTOR dir)
 void Bullet::Draw()
 {
 	MV1DrawModel(modelHandle);
+	int white = GetColor(255, 255, 255);
+	DrawFormatString(0, 20, white, "%f,%f,%f", timeCount);
+
 	DrawCollider();
 }
 

@@ -140,9 +140,11 @@ void Player::Rotate(float deltaTime)
 void Player::Movement(float deltaTime)
 {
 	// â¡ë¨.
+	speed = 0;
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)
 	{
-		speed += Acceleration;
+		//speed += Acceleration;
+		speed = 10;
 	}
 	// å∏ë¨.
 	else if (CheckHitKey(KEY_INPUT_LCONTROL) && speed >= StallSpeed)
@@ -150,7 +152,7 @@ void Player::Movement(float deltaTime)
 		speed -= Deceleration;
 	}
 	// í èÌë¨ìxÇ÷ñﬂÇ∑.
-	else if (!CheckHitKey(KEY_INPUT_LSHIFT) && !CheckHitKey(KEY_INPUT_LCONTROL))
+	/*else if (!CheckHitKey(KEY_INPUT_LSHIFT) && !CheckHitKey(KEY_INPUT_LCONTROL))
 	{
 		if (speed <= NomalSpeed)
 		{
@@ -168,7 +170,8 @@ void Player::Movement(float deltaTime)
 				speed = NomalSpeed;
 			}
 		}
-	}
+	}*/
+	
 	// îΩâf.
 	velocity = VNorm(ToZAxis(matRot)) * -speed;
 	prePos += velocity * deltaTime;
@@ -179,10 +182,14 @@ void Player::Movement(float deltaTime)
 
 void Player::BulletFire(float deltaTime)
 {
-	if (CheckHitKey(KEY_INPUT_SPACE))
+	intervalTime -= deltaTime;
+	if (intervalTime <= 0 && CheckHitKey(KEY_INPUT_SPACE))
 	{
-		bullet->Generater(pos, ToZAxis(matRot));
+		bullet->Generater(pos, ToZAxis(matRot) * -1);
+		intervalTime = FiringInterval;
 	}
+
+
 	
 }
 
@@ -192,7 +199,6 @@ void Player::Draw()
 	int white = GetColor(255, 255, 255);
 	MV1DrawModel(modelHandle);
 	DrawFormatString(0, 0, white, "%f:%f", VSize(velocity), speed);
-	DrawFormatString(0, 20, white, "dir:%f,%f,%f", dir.x, dir.y, dir.z);
 }
 
 void Player::OnCollisionEnter(const ObjectBase* other)

@@ -23,7 +23,7 @@ void BulletManager::Init()
 {
 	for (int i = 0; i < MaxBulletNum; i++)
 	{
-		
+		bullet[i]->MakePermitUpdateFalse();
 	}
 }
 
@@ -31,7 +31,7 @@ void BulletManager::Generater(VECTOR pos, VECTOR dir)
 {
 	for (int i = 0; i < MaxBulletNum; i++)
 	{
-		if (!bullet[i]->GetVisible())
+		if (!bullet[i]->GetPermitUpdate())
 		{
 			bullet[i]->Generate(pos, dir);
 			break;

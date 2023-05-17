@@ -4,7 +4,7 @@
 #include "ObjectBase.h"
 #include "ObjectTag.h"
 #include "Math.h"
-
+using namespace std;
 class ObjectManager final
 {
 public:
@@ -26,7 +26,7 @@ private:
 	ObjectManager();
 	~ObjectManager();
 	static ObjectManager* Instance;
-	std::vector<ObjectBase*> pendingObjects;
-	std::unordered_map<ObjectTag, std::vector<ObjectBase*>> objects;
+	vector<ObjectBase*> pendingObjects;
+	unordered_map<ObjectTag, vector<ObjectBase*>> objects;
 };
 

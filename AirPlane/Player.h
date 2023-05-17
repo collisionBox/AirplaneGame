@@ -21,6 +21,9 @@ private:
     HUDCamera* camera;
     BulletManager* bullet;
     const int MaxBulletsNum = 20;
+    const float FiringInterval = 0.1f;
+    float intervalTime;
+    
 
 
     VECTOR velocity; // ‘¬“x[m/s].

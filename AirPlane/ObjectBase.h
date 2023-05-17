@@ -58,7 +58,7 @@ protected:
 	int modelHandle;// モデルハンドル.
 	bool visible;// 表示するかどうかのハンドル（何もしなければ表示）.
 	bool alive;// 生きているかどうかのハンドル.
-	bool permitUpdate;// updateすることを許可するかどうか.
+	bool permitUpdate;// updateすることを許可するかどうか（デフォルトでtrue）.
 	float AP;// 残りの装甲地(AP).
 
 	// 当たり判定関連.

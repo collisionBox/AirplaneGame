@@ -14,6 +14,8 @@ VECTOR operator*(float s, const VECTOR& rhs);
 // @brief ベクトルのスカラー倍
 VECTOR operator*(const VECTOR& lhs, float s);
 
+VECTOR operator*(const VECTOR& lhs, VECTOR rhs);
+
 // @brief += VECTORの演算子
 VECTOR operator+=(VECTOR& lhs, const VECTOR& rhs);
 

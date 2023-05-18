@@ -46,6 +46,17 @@ VECTOR operator*(const VECTOR& lhs, float s)
 	return ret;
 }
 //-------------------------------------------------------------------------------
+// @brief ベクトル×ベクトル.
+//-------------------------------------------------------------------------------
+VECTOR operator*(const VECTOR& lhs, VECTOR rhs)
+{
+	VECTOR ret;
+	ret.x = lhs.x * rhs.x;
+	ret.y = lhs.y * rhs.y;
+	ret.z = lhs.z * rhs.z;
+	return ret;
+}
+//-------------------------------------------------------------------------------
 // @brief += VECTORの演算子
 //-------------------------------------------------------------------------------
 VECTOR operator+=(VECTOR& lhs, const VECTOR& rhs)

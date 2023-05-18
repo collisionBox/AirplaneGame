@@ -185,7 +185,7 @@ void Player::BulletFire(float deltaTime)
 	intervalTime -= deltaTime;
 	if (intervalTime <= 0 && CheckHitKey(KEY_INPUT_SPACE))
 	{
-		bullet->Generater(pos, ToZAxis(matRot) * -1);
+		bullet->Generater(pos, matRot);
 		intervalTime = FiringInterval;
 	}
 

@@ -9,11 +9,11 @@ public:
     Bullet(ObjectTag userTag);
     ~Bullet();
     void Init(VECTOR pos, VECTOR dir);
-    void Update(float deltaTime);
-    void Generate(VECTOR pos, VECTOR dir);
+    void Update(float deltaTime)override;
+    void Generate(VECTOR pos, MATRIX matDir);
     void MakePermitUpdateFalse() { permitUpdate = false; }// permitUpdate‚ðfalse‚É‚·‚é.
     void OnCollisionEnter(const ObjectBase* other) override;
-    void Draw();
+    void Draw()override;
 
 
 private:
@@ -24,5 +24,6 @@ private:
     const float Speed = 8.0f;// ’e‘¬.
     const float DeadTime = 3.0f;
     float timeCount;
+    const VECTOR PosCorrectionScale = VGet(-1.2f, 0.0f, -5.0f);
 };
 

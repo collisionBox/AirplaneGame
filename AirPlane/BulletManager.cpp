@@ -27,13 +27,13 @@ void BulletManager::Init()
 	}
 }
 
-void BulletManager::Generater(VECTOR pos, VECTOR dir)
+void BulletManager::Generater(VECTOR pos, MATRIX matDir)
 {
 	for (int i = 0; i < MaxBulletNum; i++)
 	{
 		if (!bullet[i]->GetPermitUpdate())
 		{
-			bullet[i]->Generate(pos, dir);
+			bullet[i]->Generate(pos, matDir);
 			break;
 		}
 	}

@@ -1,6 +1,8 @@
 #pragma once
 #include "DxLib.h"
 #include "Bullet.h"
+#include <vector>
+using namespace std;
 class BulletManager
 {
 public:
@@ -10,9 +12,9 @@ public:
 	void Generater(VECTOR pos, MATRIX matDir);
 
 private:
-	const int MaxBulletNum = 20;// ’e‚Ì“¯ˆ—Å‘å”.
-	Bullet* bullet[20];
-
+	const int MaxBulletNum = 30;// ’e‚Ì“¯ˆ—Å‘å”.
+	vector<Bullet*> bullet;
+	int bulletCounter;
 
 };
 

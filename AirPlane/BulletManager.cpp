@@ -4,7 +4,7 @@ BulletManager::BulletManager(ObjectTag userTag)
 {
 	for (int i = 0; i < MaxBulletNum; i++)
 	{
-		bullet[i] = new Bullet(userTag);
+		bullet.push_back(new Bullet(ObjectTag::Player));
 		ObjectManager::Entry(bullet[i]);
 
 	}
@@ -12,28 +12,29 @@ BulletManager::BulletManager(ObjectTag userTag)
 
 BulletManager::~BulletManager()
 {
-	for (int i = 0; i < MaxBulletNum; i++)
+	for (Bullet* ver : bullet)
 	{
-		bullet[i]->~Bullet();
-		bullet[i] = nullptr;
+		ver->~Bullet();
+		ver = nullptr;
 	}
 }
 
 void BulletManager::Init()
 {
-	for (int i = 0; i < MaxBulletNum; i++)
+	for (Bullet* ver : bullet)
 	{
-		bullet[i]->MakePermitUpdateFalse();
+		ver->Init();
 	}
 }
 
 void BulletManager::Generater(VECTOR pos, MATRIX matDir)
 {
-	for (int i = 0; i < MaxBulletNum; i++)
+	for (Bullet* ver : bullet)
 	{
-		if (!bullet[i]->GetPermitUpdate())
+		if (!ver->GetPermitUpdate())
 		{
-			bullet[i]->Generate(pos, matDir);
+			ver->Generate(pos, matDir);
+			bulletCounter++;
 			break;
 		}
 	}

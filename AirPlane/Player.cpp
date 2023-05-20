@@ -9,7 +9,7 @@ using namespace std;
 Player::Player() :
 	ObjectBase(ObjectTag::Player)
 {
-	modelHandle = AssetManager::GetMesh("data/player/player.mv1");
+	modelHandle = AssetManager::GetMesh("data/player/AH-64 Apache.pmx");
 	camera = new HUDCamera();
 	bullet = new BulletManager(ObjectTag::Player);
 	Init();
@@ -38,6 +38,7 @@ void Player::Init()
 
 	speed = NomalSpeed;
 	velocity = VNorm(ToZAxis(matRot)) * -speed;
+	rotateNum = 0.0f;
 
 	camera->Init(pos, matRot);
 	bullet->Init();
@@ -57,6 +58,11 @@ void Player::Update(float deltaTime)
 
 	// îΩâf.
 	MV1SetMatrix(modelHandle, mat);
+
+	//MATRIX matRotMainRotor = AssetManager::MV1GetFrameRotateMatrix(modelHandle, MainRotorFrame, 0, rotateNum, 0, ModelScale);
+	MATRIX matRotMainRotor = AssetManager::GetFrameRotateMatrix(modelHandle, MainRotorFrame, 0, rotateNum, 0, ModelScale);
+	MV1SetFrameUserLocalMatrix(modelHandle, MainRotorFrame, matRotMainRotor);
+	rotateNum++;
 
 	// éÀåÇ.
 	BulletFire(deltaTime);
@@ -139,7 +145,7 @@ void Player::Rotate(float deltaTime)
 void Player::Movement(float deltaTime)
 {
 	// â¡ë¨.
-#if 0
+#if 1
 	speed = 0;
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)
 	{
@@ -149,13 +155,13 @@ void Player::Movement(float deltaTime)
 #else
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)
 	{
-		speed += Acceleration;
+		speed += Acceleration - G;
 		
 	}
 	// å∏ë¨.
 	else if (CheckHitKey(KEY_INPUT_LCONTROL) && speed >= StallSpeed)
 	{
-		speed -= Deceleration;
+		speed -= Deceleration - G;
 	}
 	// í èÌë¨ìxÇ÷ñﬂÇ∑.
 	else if (!CheckHitKey(KEY_INPUT_LSHIFT) && !CheckHitKey(KEY_INPUT_LCONTROL))
@@ -179,9 +185,9 @@ void Player::Movement(float deltaTime)
 	}
 #endif	
 	// îΩâf.
-	velocity = VNorm(ToZAxis(matRot)) * -speed;
+	velocity = VNorm(ToYAxis(matRot)) * speed;
 	prePos += velocity * deltaTime;
-	pos = prePos;
+	//pos = prePos;
 	matTrans = MGetTranslate(pos);
 	mat = MMult(mat, matTrans);// áB.
 }

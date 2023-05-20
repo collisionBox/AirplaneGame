@@ -11,6 +11,8 @@ public:
 	static int GetMesh(string meshFileName);// メッシュ（モデル）の取得.
 	static void DeleteMesh(int meshID);
 	static void DeleteAllAsset();
+	static MATRIX GetFrameRotateMatrix(int modelHandle, int frameIndelx, float rotXAxsis, float rotYAxsis, float rotZAxsis, float modelScale);
+	//static MATRIX MV1GetFrameRotateMatrix(int MHandle, int FrameIndex, float Xaxis, float Yaxis, float Zaxis, float modelScale);
 	// メッシュ（モデル）の削除.
 	static void Finalize();// アセットマネージャーの終了処理.
 
@@ -23,4 +25,4 @@ private:
 	vector<int> duplicateMesh;// メッシュを複製したもの
 
 };
-
+//https://qiita.com/Nao-Taka/items/351df30064b38ef64897

@@ -17,15 +17,13 @@ private:
     void Rotate(float deltaTime);
     void Movement(float deltaTime);
     void BulletFire(float deltaTime);
-
+    
     HUDCamera* camera;
     BulletManager* bullet;
     const int MaxBulletsNum = 20;
     const float FiringInterval = 0.1f;
     float intervalTime;
     
-
-
     VECTOR velocity; // 速度[m/s].
     const float Acceleration = 36.0f;// 加速度.
     const float MaxSpeed = 2575.0f;// 最高速度.
@@ -44,12 +42,15 @@ private:
     float yaw, pitch, roll;
     VECTOR xAxis, yAxis, zAxis;
     QUATERNION quat;
-    const float ModelScale = 0.015f;
+    const float ModelScale = 0.08f;
     const float YawSpeed     = 1.05f;
-    const float PitchSpeed   = 1.6f;
+    const float PitchSpeed   = 1.0f;
     const float RollSpeed    = 1.8f;
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
-
+    const float G = 9.80665;// 重力加速度[m/s2].
+    const int MainRotorFrame = 8;
+    const int TailRotorFrame = 12;
+    float rotateNum;
 };
 //http://noa1105.seesaa.net/article/239449116.html
 //http://www.f.waseda.jp/moriya/PUBLIC_HTML/education/classes/infomath6/applet/fractal/coord/

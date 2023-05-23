@@ -88,23 +88,24 @@ MATRIX AssetManager::GetFrameRotateMatrix(int modelHandle, int frameIndelx, floa
 	int parentFrame = MV1GetFrameParent(modelHandle, frameIndelx);
 
 	// モデルの拡大率にしたがって移動距離を補正する準備.
-	if (0 != modelScale)
+	if (modelScale == 0)
 	{
-		modelScale = 1 / modelHandle;
+		
+		return MGetIdent();
 	}
 	else
 	{
-		return MGetIdent();
+		modelScale = 1 / modelScale;
 	}
-	子フレームの取得に失敗してるみたい
+	
 
 	// 相対座標分の平行移動行列を取得.
 	MATRIX matTrans;
-	if (-2 != parentFrame)
+	if (parentFrame != -2)
 	{
 		//親子フレームの座標の取得.
 		VECTOR parentVec = MV1GetFramePosition(modelHandle, parentFrame);
-		VECTOR childVec = MV1GetFramePosition(modelHandle, frameIndelx);
+		VECTOR childVec = MV1GetFramePosition(modelHandle, frameIndelx);// 動いてないのに値が変わり続ける　ワールド座標軸で回転してるからローカル座標軸に変更
 
 		// 親を基準にした子の相対座標を取得.
 		VECTOR rerativPar2chi = VSub(childVec, parentVec);
@@ -121,7 +122,7 @@ MATRIX AssetManager::GetFrameRotateMatrix(int modelHandle, int frameIndelx, floa
 
 	// それぞれの軸に沿って回転する行列を取得.
 	MATRIX matXAxis = MGetRotX(rotXAxsis);
-	MATRIX matYAxis = MGetRotY(rotYAxsis);
+	MATRIX matYAxis = MGetRotY(2);
 	MATRIX matZAxis = MGetRotZ(rotZAxsis);
 
 	// 遡って親フレームの回転要素を取得.

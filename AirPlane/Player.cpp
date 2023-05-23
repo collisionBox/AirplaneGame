@@ -33,7 +33,7 @@ void Player::Init()
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);
 
-	prePos = pos = InitPos;
+	prePos = pos = InitVec;
 	mat = MMult(mat, matRot);
 
 	speed = NomalSpeed;

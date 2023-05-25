@@ -59,8 +59,8 @@ void Player::Update(float deltaTime)
 	// ”½‰f.
 	MV1SetMatrix(modelHandle, mat);
 
-	//MATRIX matRotMainRotor = AssetManager::MV1GetFrameRotateMatrix(modelHandle, MainRotorFrame, 0, rotateNum, 0, ModelScale);
-	MATRIX matRotMainRotor = AssetManager::GetFrameRotateMatrix(modelHandle, MainRotorFrame, 0, rotateNum, 0, ModelScale);
+	MATRIX matRotMainRotor = AssetManager::MV1GetFrameRotateMatrix(modelHandle, MainRotorFrame, 0, rotateNum, 0, ModelScale);
+	//MATRIX matRotMainRotor = AssetManager::GetFrameRotateMatrix(modelHandle, MainRotorFrame, ModelScale, 0, rotateNum, 0,ToXAxis(matRot), ToYAxis(matRot), ToZAxis(matRot));
 	MV1SetFrameUserLocalMatrix(modelHandle, MainRotorFrame, matRotMainRotor);
 	rotateNum++;
 
@@ -131,11 +131,11 @@ void Player::Rotate(float deltaTime)
 	roll *= deltaTime;
 
 	// ‰ñ“]‚³‚¹‚é.
-	yAxis = ToYAxis(mat);// yaw.
+	VECTOR yAxis = ToYAxis(mat);// yaw.
 	quat = quat * CreateRotationQuaternion(yaw, yAxis);
-	xAxis = ToXAxis(mat);// pitch.
+	VECTOR xAxis = ToXAxis(mat);// pitch.
 	quat = quat * CreateRotationQuaternion(pitch, xAxis);
-	zAxis = ToZAxis(mat);// roll.
+	VECTOR zAxis = ToZAxis(mat);// roll.
 	quat = quat * CreateRotationQuaternion(roll, zAxis);
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);// ‡A.
@@ -203,6 +203,10 @@ void Player::BulletFire(float deltaTime)
 
 
 	
+}
+
+void Player::RotorRotate(float deltaTime)
+{
 }
 
 

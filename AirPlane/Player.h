@@ -17,7 +17,8 @@ private:
     void Rotate(float deltaTime);
     void Movement(float deltaTime);
     void BulletFire(float deltaTime);
-    
+    void RotorRotate(float deltaTime);
+
     HUDCamera* camera;
     BulletManager* bullet;
     const int MaxBulletsNum = 20;
@@ -40,7 +41,6 @@ private:
     MATRIX matTrans;// 移動行列.
     MATRIX matLocal;// ローカル座標.
     float yaw, pitch, roll;
-    VECTOR xAxis, yAxis, zAxis;
     QUATERNION quat;
     const float ModelScale = 0.08f;
     const float YawSpeed     = 1.05f;
@@ -49,7 +49,10 @@ private:
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
     const float G = 9.80665;// 重力加速度[m/s2].
     const int MainRotorFrame = 8;
+    const VECTOR MainRotorPos = VGet(0.0f, 300.0f, 50.0f) * ModelScale;
     const int TailRotorFrame = 12;
+    const VECTOR TailRotorPos = VGet(0.0f, 100.0f, 350.0f) * ModelScale;
+    もうごり押しでやるしかない
     float rotateNum;
 };
 //http://noa1105.seesaa.net/article/239449116.html

@@ -1,5 +1,5 @@
 #include "AssetManager.h"
-
+#include "Math.h"
 
 
 AssetManager* AssetManager::Instance = nullptr;
@@ -82,7 +82,77 @@ void AssetManager::DeleteAllAsset()
 
 }
 
-MATRIX AssetManager::GetFrameRotateMatrix(int modelHandle, int frameIndelx, float rotXAxsis, float rotYAxsis, float rotZAxsis, float modelScale)
+MATRIX AssetManager::GetFrameRotateMatrix(int modelHandle, int frameIndelx, float modelScale, float rotXAxsis, float rotYAxsis, float rotZAxsis, VECTOR xAxis, VECTOR yAxis, VECTOR zAxis)
+{
+	// 親フレームの取得.
+	int parentFrame = MV1GetFrameParent(modelHandle, frameIndelx);
+	// モデルの拡大率にしたがって移動距離を補正する準備.
+	if (modelScale == 0)
+	{
+		return MGetIdent();
+	}
+	else
+	{
+		modelScale = 1 / modelScale;
+	}
+	// 親フレームが存在するなら相対座標分だけ平衡移動する行列を取得.
+	MATRIX matTrans;
+	if (parentFrame != -2)
+	{
+		//親子フレームの座標の取得.
+		VECTOR parentVec = MV1GetFramePosition(modelHandle, parentFrame);
+		VECTOR childVec = MV1GetFramePosition(modelHandle, frameIndelx);//　ワールド座標軸で回転してるからローカル座標軸に変更
+
+		// 親を基準にした子の相対座標を取得.
+		VECTOR rerativPar2chi = VSub(childVec, parentVec);
+		// モデルの拡大率によって相対距離を修正.
+		rerativPar2chi = VScale(rerativPar2chi, modelScale);
+		matTrans = MGetTranslate(rerativPar2chi);
+
+	}
+	else
+	{
+		matTrans = MGetIdent();
+	}
+	// それぞれの軸に沿って回転する行列を取得.
+	MATRIX matXAxis = MGetRotAxis(xAxis, rotXAxsis);
+	MATRIX matYAxis = MGetRotAxis(yAxis, rotYAxsis);
+	MATRIX matZAxis = MGetRotAxis(zAxis, rotZAxsis);
+
+	// 遡って親フレームの回転要素を取得.
+	vector<MATRIX> matParentsRotates;
+	while (-2 != parentFrame && -1 != parentFrame)
+	{
+		// 親フレームの座標を取得し、そこから回転要素を抽出.
+		MATRIX matParentFrame = MV1GetFrameLocalMatrix(modelHandle, parentFrame);
+		MATRIX matParentRotate = MGetRotElem(matParentFrame);
+		// 回転行列の逆行列　＝　回転の方向を逆にする.
+		MATRIX matParentRoateInv = MInverse(matParentRotate);
+		// 順に追加.
+		matParentsRotates.push_back(matParentRoateInv);
+
+		// 親のフレームを追加取得.
+		parentFrame = MV1GetFrameParent(modelHandle, parentFrame);
+
+	}
+	// 取得した祖先たちの回転行列をより中枢のほうからかけて、平行移動のベクトルを補正する.
+	for (int i = matParentsRotates.size() - 1; i >= 0; i--)
+	{
+		matTrans = MMult(matTrans, matParentsRotates[i]);
+	}
+
+	// 平行移動ベクトルに生じうる回転成分を消す.
+	matTrans.m[0][0] = 1; matTrans.m[0][1] = 0; matTrans.m[0][2] = 0;
+	matTrans.m[1][0] = 0; matTrans.m[1][1] = 1; matTrans.m[1][2] = 0;
+	matTrans.m[2][0] = 0; matTrans.m[2][1] = 0; matTrans.m[2][2] = 1;
+
+	// 軸毎に回転させてから平行移動を実行する.
+	MATRIX matReturn = MMult(MMult(MMult(matXAxis, matYAxis), matZAxis), matTrans);
+
+	return matReturn;
+}
+
+MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndelx, float rotXAxsis, float rotYAxsis, float rotZAxsis, float modelScale)
 {
 	// 親フレームの取得.
 	int parentFrame = MV1GetFrameParent(modelHandle, frameIndelx);
@@ -90,14 +160,13 @@ MATRIX AssetManager::GetFrameRotateMatrix(int modelHandle, int frameIndelx, floa
 	// モデルの拡大率にしたがって移動距離を補正する準備.
 	if (modelScale == 0)
 	{
-		
 		return MGetIdent();
 	}
 	else
 	{
 		modelScale = 1 / modelScale;
 	}
-	
+
 
 	// 相対座標分の平行移動行列を取得.
 	MATRIX matTrans;
@@ -105,7 +174,7 @@ MATRIX AssetManager::GetFrameRotateMatrix(int modelHandle, int frameIndelx, floa
 	{
 		//親子フレームの座標の取得.
 		VECTOR parentVec = MV1GetFramePosition(modelHandle, parentFrame);
-		VECTOR childVec = MV1GetFramePosition(modelHandle, frameIndelx);// 動いてないのに値が変わり続ける　ワールド座標軸で回転してるからローカル座標軸に変更
+		VECTOR childVec = MV1GetFramePosition(modelHandle, frameIndelx);//　ワールド座標軸で回転してるからローカル座標軸に変更
 
 		// 親を基準にした子の相対座標を取得.
 		VECTOR rerativPar2chi = VSub(childVec, parentVec);
@@ -122,7 +191,7 @@ MATRIX AssetManager::GetFrameRotateMatrix(int modelHandle, int frameIndelx, floa
 
 	// それぞれの軸に沿って回転する行列を取得.
 	MATRIX matXAxis = MGetRotX(rotXAxsis);
-	MATRIX matYAxis = MGetRotY(2);
+	MATRIX matYAxis = MGetRotY(rotYAxsis);
 	MATRIX matZAxis = MGetRotZ(rotZAxsis);
 
 	// 遡って親フレームの回転要素を取得.
@@ -142,7 +211,7 @@ MATRIX AssetManager::GetFrameRotateMatrix(int modelHandle, int frameIndelx, floa
 
 	}
 	// 取得した祖先たちの回転行列をより中枢のほうからかけて、平行移動のベクトルを補正する.
-	for (int i = matParentsRotates.size() - 1; i >= 0 ; i--)
+	for (int i = matParentsRotates.size() - 1; i >= 0; i--)
 	{
 		matTrans = MMult(matTrans, matParentsRotates[i]);
 	}

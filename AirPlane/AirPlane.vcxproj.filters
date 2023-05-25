@@ -79,7 +79,7 @@
       <Filter>ソース ファイル\Object\Camera\Base</Filter>
     </ClCompile>
     <ClCompile Include="BulletManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -135,7 +135,7 @@
       <Filter>ソース ファイル\Object\Camera\Base</Filter>
     </ClInclude>
     <ClInclude Include="BulletManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,6 +10,8 @@ Player::Player() :
 	ObjectBase(ObjectTag::Player)
 {
 	modelHandle = AssetManager::GetMesh("data/player/AH-64 Apache.pmx");
+	attachIndex = MV1AttachAnim(modelHandle, 0, -1, false);
+	animTotalPlayTime = MV1GetAnimTotalTime(modelHandle, attachIndex);
 	camera = new HUDCamera();
 	bullet = new BulletManager(ObjectTag::Player);
 	Init();
@@ -24,8 +26,7 @@ Player::~Player()
 
 void Player::Init()
 {
-
-	mat = mat = matScale;
+	mat = matScale;
 
 	yaw = pitch = roll = 0.0f;
 	quat.x = quat.y = quat.z = 0.0f;
@@ -35,10 +36,11 @@ void Player::Init()
 
 	prePos = pos = InitVec;
 	mat = MMult(mat, matRot);
-
 	speed = NomalSpeed;
 	velocity = VNorm(ToZAxis(matRot)) * -speed;
 	rotateNum = 0.0f;
+	animPlayTime = 0.0f;
+	MV1SetAttachAnimTime(modelHandle, attachIndex, animPlayTime);
 
 	camera->Init(pos, matRot);
 	bullet->Init();
@@ -48,7 +50,7 @@ void Player::Init()
 void Player::Update(float deltaTime)
 {
 	// ƒXƒP[ƒ‹.
-	mat = matScale;// ‡@.
+	mat = MGetIdent();// ‡@.
 
 	// ‰ñ“].
 	Rotate(deltaTime);
@@ -58,17 +60,20 @@ void Player::Update(float deltaTime)
 
 	// ”½‰f.
 	MV1SetMatrix(modelHandle, mat);
-
-	MATRIX matRotMainRotor = AssetManager::MV1GetFrameRotateMatrix(modelHandle, MainRotorFrame, 0, rotateNum, 0, ModelScale);
-	//MATRIX matRotMainRotor = AssetManager::GetFrameRotateMatrix(modelHandle, MainRotorFrame, ModelScale, 0, rotateNum, 0,ToXAxis(matRot), ToYAxis(matRot), ToZAxis(matRot));
-	MV1SetFrameUserLocalMatrix(modelHandle, MainRotorFrame, matRotMainRotor);
-	rotateNum++;
+	MV1SetAttachAnimTime(modelHandle, attachIndex, animPlayTime);
+	animPlayTime += deltaTime;
+	if (animPlayTime >= animTotalPlayTime)
+	{
+		animPlayTime = 0.0f;
+	}
+	
+	RotorRotate(deltaTime);
 
 	// ŽËŒ‚.
 	BulletFire(deltaTime);
 
 	// ƒJƒƒ‰.
-	camera->Update(pos, matRot, deltaTime);
+	camera->Update(pos, matRot,ModelScale, deltaTime);
 
 	
 
@@ -139,7 +144,6 @@ void Player::Rotate(float deltaTime)
 	quat = quat * CreateRotationQuaternion(roll, zAxis);
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);// ‡A.
-
 }
 
 void Player::Movement(float deltaTime)
@@ -187,7 +191,7 @@ void Player::Movement(float deltaTime)
 	// ”½‰f.
 	velocity = VNorm(ToYAxis(matRot)) * speed;
 	prePos += velocity * deltaTime;
-	//pos = prePos;
+	pos = prePos;
 	matTrans = MGetTranslate(pos);
 	mat = MMult(mat, matTrans);// ‡B.
 }
@@ -207,14 +211,27 @@ void Player::BulletFire(float deltaTime)
 
 void Player::RotorRotate(float deltaTime)
 {
+	MATRIX matMainRotor = AssetManager::MV1GetFrameRotateMatrix(modelHandle, MainRotorFrame, ModelScale, VGet(0.0f, rotateNum, 0.0f));
+	MATRIX matTailRotor = AssetManager::MV1GetFrameRotateMatrix(modelHandle, TailRotorFrame, ModelScale, VGet(rotateNum, 0.0f, 0.0f));
+	MV1SetFrameUserLocalMatrix(modelHandle, MainRotorFrame, matMainRotor);
+	MV1SetFrameUserLocalMatrix(modelHandle, TailRotorFrame, matTailRotor);
+	rotateNum++;
+	if (rotateNum > 360.0f)
+	{
+		rotateNum = 0.0f;
+	}
+
 }
+
 
 
 void Player::Draw()
 {
 	int white = GetColor(255, 255, 255);
 	MV1DrawModel(modelHandle);
+	VECTOR a = MV1GetFramePosition(modelHandle, MainRotorFrame);
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
+	DrawFormatString(0, 20, white, "%f:%f:%f", a.x, a.y, a.z);
 }
 
 void Player::OnCollisionEnter(const ObjectBase* other)

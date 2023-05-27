@@ -12,7 +12,7 @@ public:
 	static void DeleteMesh(int meshID);
 	static void DeleteAllAsset();
 	static MATRIX GetFrameRotateMatrix(int modelHandle, int frameIndelx, float modelScale, float rotXAxsis, float rotYAxsis, float rotZAxsis, VECTOR xAxis = VGet(1.0f, 0.0f, 0.0f), VECTOR yAxis = VGet(0.0f, 1.0f, 0.0f), VECTOR zAxis = VGet(0.0f, 0.0f, 1.0f));
-	static MATRIX MV1GetFrameRotateMatrix(int MHandle, int FrameIndex, float Xaxis, float Yaxis, float Zaxis, float modelScale);
+	static MATRIX MV1GetFrameRotateMatrix(int modelHandle, int frameIndelx, float modelScale, VECTOR rotate);
 	// メッシュ（モデル）の削除.
 	static void Finalize();// アセットマネージャーの終了処理.
 

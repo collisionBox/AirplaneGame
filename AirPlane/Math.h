@@ -22,6 +22,9 @@ VECTOR operator+=(VECTOR& lhs, const VECTOR& rhs);
 // @brief *= VECTORのスカラー倍の複合代入演算子
 VECTOR operator*=(VECTOR& lhs, float rhs);
 
+// @brief マトリクス同士の減算.
+MATRIX operator-(const MATRIX& lhs, MATRIX rhs);
+
 // @brief ベクトルを割る.
 VECTOR Division(const VECTOR& In, float num);
 

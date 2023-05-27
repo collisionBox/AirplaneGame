@@ -5,7 +5,7 @@ class CameraBase
 public:
 	CameraBase();
 	virtual ~CameraBase();
-	virtual void Update(VECTOR pos, MATRIX matRot, float deltaTime) = 0;  // ゲームオブジェクト更新処理
+	virtual void Update(VECTOR pos, MATRIX matRot,float modelScale, float deltaTime) = 0;  // ゲームオブジェクト更新処理
 
 protected:
 	void SetPos(const VECTOR set) { pos = set; }// 位置セット

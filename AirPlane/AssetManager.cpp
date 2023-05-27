@@ -82,11 +82,39 @@ void AssetManager::DeleteAllAsset()
 
 }
 
+VECTOR AssetManager::GetFramePos(int modelHandle, int frameIndex)
+{
+	return GetTransMat(MV1GetFrameLocalMatrix(modelHandle, frameIndex));
+}
 
-MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndelx, float modelScale, VECTOR rotate)
+MATRIX AssetManager::GetFrameTransMatrix(int modelHandle, int frameIndex, float modelScale)
 {
 	// 親フレームの取得.
-	int parentFrame = MV1GetFrameParent(modelHandle, frameIndelx);
+	int parentFrame = MV1GetFrameParent(modelHandle, frameIndex);
+
+	if (parentFrame != -2)
+	{
+		//親子フレームの座標の取得.
+		VECTOR parentVec = GetFramePos(modelHandle, parentFrame);
+		VECTOR childVec = GetFramePos(modelHandle, frameIndex);
+
+		// 親を基準にした子の相対座標を取得.
+		VECTOR rerativPar2chi = VSub(childVec, parentVec);
+		// モデルの拡大率によって相対距離を修正.
+		rerativPar2chi = VScale(rerativPar2chi, modelScale);
+		return MGetTranslate(childVec);
+	}
+	else
+	{
+		return MGetIdent();
+	}
+}
+
+
+MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndex, float modelScale, VECTOR rotate)
+{
+	// 親フレームの取得.
+	int parentFrame = MV1GetFrameParent(modelHandle, frameIndex);
 
 	// モデルの拡大率にしたがって移動距離を補正する準備.
 	if (modelScale == 0)
@@ -103,12 +131,11 @@ MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndelx, f
 	if (parentFrame != -2)
 	{
 		//親子フレームの座標の取得.
-		VECTOR parentVec = GetTransMat(MV1GetFrameLocalMatrix(modelHandle, parentFrame));
-		VECTOR childVec = GetTransMat(MV1GetFrameLocalMatrix(modelHandle, frameIndelx));
+		VECTOR parentVec = GetFramePos(modelHandle, parentFrame);
+		VECTOR childVec = GetFramePos(modelHandle, frameIndex);
 
 		// 親を基準にした子の相対座標を取得.
 		VECTOR rerativPar2chi = VSub(childVec, parentVec);
-		//VECTOR rerativPar2chi = VSub(parentVec, childVec);
 		// モデルの拡大率によって相対距離を修正.
 		rerativPar2chi = VScale(rerativPar2chi, modelScale);
 		matTrans = MGetTranslate(childVec);
@@ -117,7 +144,7 @@ MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndelx, f
 	{
 		matTrans = MGetIdent();
 	}
-
+	
 	// それぞれの軸に沿って回転する行列を取得.
 	MATRIX matXAxis = MGetRotX(rotate.x);
 	MATRIX matYAxis = MGetRotY(rotate.y);

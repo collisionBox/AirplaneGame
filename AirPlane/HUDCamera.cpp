@@ -1,5 +1,6 @@
 #include "HUDCamera.h"
 #include "Math.h"
+#include "AssetManager.h"
 HUDCamera::HUDCamera()
 {
 }
@@ -27,9 +28,8 @@ void HUDCamera::Update(VECTOR pos, MATRIX matRot, float modelScale, float deltaT
 	targetPos = pos;
 #else
 	this->pos = pos;
-	this->pos += VNorm(ToYAxis(matRot))* Cockpit.y * modelScale;
-	this->pos += VNorm(ToZAxis(matRot)) * Cockpit.z * modelScale;
 	targetPos = VNorm(ToZAxis(matRot)) * -OffsetLen;
+	VECTOR upVec = VNorm(ToYAxis(matRot));
 #endif
 	SetCameraPositionAndTargetAndUpVec(this->pos, targetPos, upVec);
 	

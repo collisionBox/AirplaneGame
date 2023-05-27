@@ -10,8 +10,6 @@ Player::Player() :
 	ObjectBase(ObjectTag::Player)
 {
 	modelHandle = AssetManager::GetMesh("data/player/AH-64 Apache.pmx");
-	attachIndex = MV1AttachAnim(modelHandle, 0, -1, false);
-	animTotalPlayTime = MV1GetAnimTotalTime(modelHandle, attachIndex);
 	camera = new HUDCamera();
 	bullet = new BulletManager(ObjectTag::Player);
 	Init();
@@ -39,10 +37,8 @@ void Player::Init()
 	speed = NomalSpeed;
 	velocity = VNorm(ToZAxis(matRot)) * -speed;
 	rotateNum = 0.0f;
-	animPlayTime = 0.0f;
-	MV1SetAttachAnimTime(modelHandle, attachIndex, animPlayTime);
 
-	camera->Init(pos, matRot);
+	camera->Init(AssetManager::GetFramePos(modelHandle,CockpitFrontSeat), matRot);
 	bullet->Init();
 
 }
@@ -60,12 +56,6 @@ void Player::Update(float deltaTime)
 
 	// ”½‰f.
 	MV1SetMatrix(modelHandle, mat);
-	MV1SetAttachAnimTime(modelHandle, attachIndex, animPlayTime);
-	animPlayTime += deltaTime;
-	if (animPlayTime >= animTotalPlayTime)
-	{
-		animPlayTime = 0.0f;
-	}
 	
 	RotorRotate(deltaTime);
 
@@ -74,7 +64,7 @@ void Player::Update(float deltaTime)
 
 	// ƒJƒƒ‰.
 	camera->Update(pos, matRot,ModelScale, deltaTime);
-
+	//GetTransMat(MV1GetFrameLocalWorldMatrix(modelHandle, CockpitFrontSeat))
 	
 
 }

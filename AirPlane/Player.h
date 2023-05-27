@@ -49,19 +49,13 @@ private:
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
     const float G = 9.80665f;// 重力加速度[m/s2].
     const int MainRotorFrame = 8;// メインローターフレームナンバー.
-    const VECTOR MainRotorPos = VGet(0.0f, 36.486f, -46.728f);
     const int TailRotorFrame = 12;// テールローターフレームナンバー.
-    const VECTOR TailRotorPos = VGet(4.231f,40.900f,80.611f) * ModelScale;
     const int ChainGunRotateFrame = 14;// チェーンガン回転軸フレームナンバー.
-    const VECTOR ChainGunRotatePos = VGet(0.143f, 10.999f, -84.701f);
     const int ChainGunElevationAngleFlame = 15;// チェーンガン仰角フレームナンバー.
-    const VECTOR ChainGunElevationAnglePos = VGet(0.582f, -6.088f, 0.460f);
     const int ChainGunMuzzleFlame = 16;// チェーンガン銃口フレームナンバー.
-    const VECTOR ChainGunMuzzlePos = VGet(0.726f, 0.627f, -20.396f);
-   
+    const int CockpitFrontSeat = 21;// コックピット前席.
+    const int CockpitRearSeat = 22;// コックピット後席.
     float rotateNum;
-    int attachIndex;
-    float animTotalPlayTime, animPlayTime;
 };
 //http://noa1105.seesaa.net/article/239449116.html
 //http://www.f.waseda.jp/moriya/PUBLIC_HTML/education/classes/infomath6/applet/fractal/coord/

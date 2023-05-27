@@ -98,22 +98,13 @@ MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndelx, f
 		modelScale = 1 / modelScale;
 	}
 
-
-
 	// 相対座標分の平行移動行列を取得.
 	MATRIX matTrans;
-#if 1
 	if (parentFrame != -2)
 	{
 		//親子フレームの座標の取得.
-		VECTOR parentVec = MV1GetFramePosition(modelHandle, parentFrame);
-		VECTOR childVec = MV1GetFramePosition(modelHandle, frameIndelx);
-		parentVec = VGet(MV1GetFrameLocalMatrix(modelHandle, parentFrame).m[3][0],
-			MV1GetFrameLocalMatrix(modelHandle, parentFrame).m[3][1],
-			MV1GetFrameLocalMatrix(modelHandle, parentFrame).m[3][2]);
-		childVec = VGet(MV1GetFrameLocalMatrix(modelHandle, frameIndelx).m[3][0],
-			MV1GetFrameLocalMatrix(modelHandle, frameIndelx).m[3][1],
-			MV1GetFrameLocalMatrix(modelHandle, frameIndelx).m[3][2]);
+		VECTOR parentVec = GetTransMat(MV1GetFrameLocalMatrix(modelHandle, parentFrame));
+		VECTOR childVec = GetTransMat(MV1GetFrameLocalMatrix(modelHandle, frameIndelx));
 
 		// 親を基準にした子の相対座標を取得.
 		VECTOR rerativPar2chi = VSub(childVec, parentVec);
@@ -126,9 +117,6 @@ MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndelx, f
 	{
 		matTrans = MGetIdent();
 	}
-#else
-	MATRIX parent = 
-#endif
 
 	// それぞれの軸に沿って回転する行列を取得.
 	MATRIX matXAxis = MGetRotX(rotate.x);
@@ -165,7 +153,6 @@ MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndelx, f
 
 	// 軸毎に回転させてから平行移動を実行する.
 	
-	//MATRIX matReturn = MMult(MMult(MMult(matXAxis, matYAxis), matZAxis), matTrans);
 	MATRIX matReturn = MGetScale(VGet(modelScale, modelScale, modelScale));
 	matReturn = MMult(matXAxis, matYAxis);
 	matReturn = MMult(matReturn, matZAxis);

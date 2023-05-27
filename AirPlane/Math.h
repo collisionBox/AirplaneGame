@@ -81,6 +81,8 @@ const MATRIX InitMat = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 VECTOR MtoV(MATRIX mat);
 
+VECTOR GetTransMat(MATRIX matrix);
+
 // @brief mat * mat
 MATRIX operator*(MATRIX lhs, MATRIX rhs);
 

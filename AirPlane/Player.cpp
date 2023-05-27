@@ -220,7 +220,7 @@ void Player::RotorRotate(float deltaTime)
 	{
 		rotateNum = 0.0f;
 	}
-
+	
 }
 
 

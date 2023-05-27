@@ -335,6 +335,15 @@ VECTOR MtoV(MATRIX mat)
 	return result;
 }
 
+VECTOR GetTransMat(MATRIX matrix)
+{
+	VECTOR ret;
+	ret.x = matrix.m[3][0];
+	ret.y = matrix.m[3][1];
+	ret.z = matrix.m[3][2];
+	return ret;
+}
+
 MATRIX operator*(MATRIX lhs, MATRIX rhs)
 {
 	return MMult(lhs, rhs);

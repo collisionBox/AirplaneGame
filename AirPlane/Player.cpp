@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "AssetManager.h"
 #include "ObjectManager.h"
+#include "HUDCamera.h"
+#include "TPCamera.h"
 #include "Math.h"
 #include <algorithm>
 #include <cmath>
@@ -38,7 +40,7 @@ void Player::Init()
 	velocity = VNorm(ToZAxis(matRot)) * -speed;
 	rotateNum = 0.0f;
 
-	camera->Init(AssetManager::GetFramePos(modelHandle,CockpitFrontSeat), matRot);
+	camera->Init(pos, matRot, modelHandle, CockpitFrontSeat);
 	bullet->Init();
 
 }
@@ -63,7 +65,7 @@ void Player::Update(float deltaTime)
 	BulletFire(deltaTime);
 
 	// ƒJƒƒ‰.
-	camera->Update(pos, matRot,ModelScale, deltaTime);
+	camera->Update(pos, matRot, deltaTime);
 	//GetTransMat(MV1GetFrameLocalWorldMatrix(modelHandle, CockpitFrontSeat))
 	
 
@@ -222,6 +224,7 @@ void Player::Draw()
 	VECTOR a = MV1GetFramePosition(modelHandle, MainRotorFrame);
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
 	DrawFormatString(0, 20, white, "%f:%f:%f", a.x, a.y, a.z);
+	camera->DebagDraw();
 }
 
 void Player::OnCollisionEnter(const ObjectBase* other)

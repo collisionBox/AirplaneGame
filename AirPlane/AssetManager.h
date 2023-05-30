@@ -9,12 +9,12 @@ class AssetManager final
 public:
 	static void Initalize();// 初期化.
 	static int GetMesh(string meshFileName);// メッシュ（モデル）の取得.
-	static void DeleteMesh(int meshID);
+	static void DeleteMesh(int meshID);	// メッシュ（モデル）の削除.
 	static void DeleteAllAsset();
 	static VECTOR GetFramePos(int modelHandle, int frameIndex);
 	static MATRIX GetFrameTransMatrix(int modelHandle, int frameIndex, float modelScale);
 	static MATRIX MV1GetFrameRotateMatrix(int modelHandle, int frameIndex, float modelScale, VECTOR rotate);
-	// メッシュ（モデル）の削除.
+
 	static void Finalize();// アセットマネージャーの終了処理.
 
 private:

@@ -1,6 +1,6 @@
 #pragma once
 #include "ObjectBase.h"
-#include "HUDCamera.h"
+#include "CameraBase.h"
 #include "BulletManager.h"
 #include <memory>
 class Player :
@@ -19,7 +19,7 @@ private:
     void BulletFire(float deltaTime);
     void RotorRotate(float deltaTime);
 
-    HUDCamera* camera;
+    CameraBase* camera;
     BulletManager* bullet;
     const int MaxBulletsNum = 20;
     const float FiringInterval = 0.1f;

@@ -154,6 +154,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="TPCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneHedder.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="TPCamera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

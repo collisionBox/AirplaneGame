@@ -1,36 +1,28 @@
 #include "HUDCamera.h"
 #include "Math.h"
 #include "AssetManager.h"
-HUDCamera::HUDCamera()
-{
-}
 
-HUDCamera::~HUDCamera()
+void HUDCamera::Init(VECTOR pos, MATRIX matRot, int modelHandle, int frameIndex)
 {
-}
-
-void HUDCamera::Init(VECTOR pos, MATRIX matRot)
-{
-	this->pos = pos + VNorm(ToZAxis(matRot)) * OffsetLen + VNorm(ToYAxis(matRot)) * OffsetY;
-	targetPos = pos;
+	this->pos = AssetManager::GetFramePos(ModelHandle, FrameIndex);
+	targetPos = ToZAxis(matRot) * -OffsetLen;
 	SetCameraPositionAndTargetAndUpVec(this->pos, targetPos, VNorm(ToYAxis(matRot)));
+	ModelHandle = modelHandle;
+	FrameIndex = frameIndex;
 }
 
-void HUDCamera::Update(VECTOR pos, MATRIX matRot, float modelScale, float deltaTime)
+void HUDCamera::Update(VECTOR pos, MATRIX matRot, float deltaTime)
 {
-#if 1
-	VECTOR upVec = VGet(0.0f, 1.0f, 0.0f);
-	if (!CheckHitKey(KEY_INPUT_C))
-	{
-		this->pos = pos + VNorm(ToZAxis(matRot)) * OffsetLen + VNorm(ToYAxis(matRot)) * OffsetY;
-		upVec = VNorm(ToYAxis(matRot));
-	}
-	targetPos = pos;
-#else
-	this->pos = pos;
-	targetPos = VNorm(ToZAxis(matRot)) * -OffsetLen;
-	VECTOR upVec = VNorm(ToYAxis(matRot));
-#endif
-	SetCameraPositionAndTargetAndUpVec(this->pos, targetPos, upVec);
+	this->pos = AssetManager::GetFramePos(ModelHandle, FrameIndex);
+	targetPos = this->pos + ToZAxis(matRot) * -OffsetLen;
+
+	SetCameraPositionAndTargetAndUpVec(this->pos, targetPos, ToYAxis(matRot));
 	
 }
+
+void HUDCamera::DebagDraw()
+{
+	int white = GetColor(255, 255, 255);
+	DrawFormatString(0, 60, white, "%f:%f:%f", targetPos.x, targetPos.y, targetPos.z);
+}
+

@@ -127,23 +127,23 @@ MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndex, fl
 	}
 
 	// 相対座標分の平行移動行列を取得.
-	MATRIX matTrans;
-	if (parentFrame != -2)
-	{
-		//親子フレームの座標の取得.
-		VECTOR parentVec = GetFramePos(modelHandle, parentFrame);
-		VECTOR childVec = GetFramePos(modelHandle, frameIndex);
+	MATRIX matTrans = GetFrameTransMatrix(modelHandle, frameIndex, modelScale);
+	//if (parentFrame != -2)
+	//{
+	//	//親子フレームの座標の取得.
+	//	VECTOR parentVec = GetFramePos(modelHandle, parentFrame);
+	//	VECTOR childVec = GetFramePos(modelHandle, frameIndex);
 
-		// 親を基準にした子の相対座標を取得.
-		VECTOR rerativPar2chi = VSub(childVec, parentVec);
-		// モデルの拡大率によって相対距離を修正.
-		rerativPar2chi = VScale(rerativPar2chi, modelScale);
-		matTrans = MGetTranslate(childVec);
-	}
-	else
-	{
-		matTrans = MGetIdent();
-	}
+	//	// 親を基準にした子の相対座標を取得.
+	//	VECTOR rerativPar2chi = VSub(childVec, parentVec);
+	//	// モデルの拡大率によって相対距離を修正.
+	//	rerativPar2chi = VScale(rerativPar2chi, modelScale);
+	//	matTrans = MGetTranslate(childVec);
+	//}
+	//else
+	//{
+	//	matTrans = MGetIdent();
+	//}
 	
 	// それぞれの軸に沿って回転する行列を取得.
 	MATRIX matXAxis = MGetRotX(rotate.x);

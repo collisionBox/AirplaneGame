@@ -1,17 +1,15 @@
 #pragma once
 #include "CameraBase.h"
-class HUDCamera :
+class TPCamera :
     public CameraBase
 {
-public: 
+public:
     void Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int frameIndex)override;
     void Update(VECTOR pos, MATRIX matRot, float deltaTime)override;
     void DebagDraw()override;
 private:
-    const float OffsetLen = 10.0f;
-    const float OffsetY = 50.0f;
-    VECTOR cockpitPos;
-    int ModelHandle;
-    int FrameIndex;
+    const float OffsetLen = 200.0f;
+    const float OffsetY = 100.0f;
+    const float OffsetX = OffsetLen * OffsetLen - OffsetY * OffsetY;
 };
 

@@ -225,8 +225,8 @@ QUATERNION CreateRotationQuaternion(float radian, VECTOR Axis)
 	Axis.y *= norm;
 	Axis.z *= norm;
 
-	ccc = cos(0.5 * radian);
-	sss = sin(0.5 * radian);
+	ccc = cosf(0.5 * radian);
+	sss = sinf(0.5 * radian);
 
 	ans.t = ccc;
 	ans.x = sss * Axis.x;
@@ -335,7 +335,7 @@ VECTOR MtoV(MATRIX mat)
 	return result;
 }
 
-VECTOR GetTransMat(MATRIX matrix)
+VECTOR GetTransMat2Vec(MATRIX matrix)
 {
 	VECTOR ret;
 	ret.x = matrix.m[3][0];

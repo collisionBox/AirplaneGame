@@ -4,7 +4,7 @@ class CameraBase
 {
 public:
 	virtual void Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int frameIndex) = 0;// 初期化.
-	virtual void Update(VECTOR pos, MATRIX matRot, float deltaTime) = 0;  // 更新処理
+	virtual void Update(VECTOR pos, MATRIX matRot) = 0;  // 更新処理
 	virtual void DebagDraw() {};
 
 protected:

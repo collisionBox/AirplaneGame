@@ -1,6 +1,6 @@
 #pragma once
 #include "ObjectBase.h"
-#include "CameraBase.h"
+#include "CameraManager.h"
 #include "BulletManager.h"
 #include <memory>
 class Player :
@@ -19,35 +19,38 @@ private:
     void BulletFire(float deltaTime);
     void RotorRotate(float deltaTime);
 
-    CameraBase* camera;
+    CameraManager* camera;
     BulletManager* bullet;
     const int MaxBulletsNum = 20;
     const float FiringInterval = 0.1f;
     float intervalTime;
     
+    // 機体関係.
     VECTOR velocity; // 速度[m/s].
     const float Acceleration = 36.0f;// 加速度.
     const float MaxSpeed = 2575.0f;// 最高速度.
     const float Deceleration = 20.0f;// 減速度.
     const float StallSpeed = 220.0f;// 失速速度.
     const float NomalSpeed = 600.0f;// 通常速度.
-    float speed;
     const float DefaultUpwardAccel = 5.0f;
     const float DownwardAccel = 8.0f;
     const float DefaultDownwardAccel = 5.0f;
     const VECTOR InitPos = VGet(0.0f, 100.0f, 0.0f);// 初期位置.
-    MATRIX mat;// ワールド座標.
-    MATRIX matRot;// 回転行列.
-    MATRIX matTrans;// 移動行列.
-    MATRIX matLocal;// ローカル座標.
-    float yaw, pitch, roll;
-    QUATERNION quat;
     const float ModelScale = 0.08f;
     const float YawSpeed     = 1.05f;
     const float PitchSpeed   = 1.0f;
     const float RollSpeed    = 1.8f;
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
     const float G = 9.80665f;// 重力加速度[m/s2].
+    float speed;
+    MATRIX mat;// ワールド座標.
+    MATRIX matRot;// 回転行列.
+    MATRIX matTrans;// 移動行列.
+    MATRIX matLocal;// ローカル座標.
+    float yaw, pitch, roll;
+    QUATERNION quat;// 方向クォータニオン.
+
+    // フレーム番号.
     const int MainRotorFrame = 8;// メインローターフレームナンバー.
     const int TailRotorFrame = 12;// テールローターフレームナンバー.
     const int ChainGunRotateFrame = 14;// チェーンガン回転軸フレームナンバー.

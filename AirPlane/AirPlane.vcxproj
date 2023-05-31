@@ -152,7 +152,6 @@
     <ClCompile Include="ObjectBase.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="TPCamera.cpp" />
   </ItemGroup>
@@ -171,7 +170,6 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ObjectTag.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneHedder.h" />
     <ClInclude Include="SceneManager.h" />

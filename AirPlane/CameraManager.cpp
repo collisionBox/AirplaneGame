@@ -1,1 +1,49 @@
 #include "CameraManager.h"
+#include "HUDCamera.h"
+#include "TPCamera.h"
+CameraManager::CameraManager()
+{
+	camera[0] = new TPCamera;
+	camera[1] = new HUDCamera;
+	inputFlag = false;
+	cameraNum = 0;
+}
+void CameraManager::Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int frameIndex)
+{
+	
+	for (pair<int,CameraBase*> ver : camera)
+	{
+		ver.second->Init(pos, matRot, modelHandle, frameIndex);
+	}
+
+	inputFlag = false;
+	cameraNum = 0;
+}
+
+void CameraManager::Update(VECTOR pos, MATRIX matRot)
+{
+	
+	if (CheckHitKey(KEY_INPUT_V))
+	{
+		if (!inputFlag)
+		{
+			cameraNum++;
+			if (cameraNum > camera.size() - 1)
+			{
+				cameraNum = 0;
+			}
+		}
+		
+		inputFlag = true;
+	}
+	else
+	{
+		inputFlag = false;
+	}
+	camera[cameraNum]->Update(pos, matRot);
+}
+
+void CameraManager::DebagDraw()
+{
+	camera[cameraNum]->DebagDraw();
+}

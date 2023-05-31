@@ -5,7 +5,7 @@ class TPCamera :
 {
 public:
     void Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int frameIndex)override;
-    void Update(VECTOR pos, MATRIX matRot, float deltaTime)override;
+    void Update(VECTOR pos, MATRIX matRot)override;
     void DebagDraw()override;
 private:
     const float OffsetLen = 200.0f;

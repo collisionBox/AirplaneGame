@@ -1,8 +1,8 @@
 #include "Player.h"
 #include "AssetManager.h"
 #include "ObjectManager.h"
-#include "HUDCamera.h"
-#include "TPCamera.h"
+//#include "HUDCamera.h"
+//#include "TPCamera.h"
 #include "Math.h"
 #include <algorithm>
 #include <cmath>
@@ -12,7 +12,7 @@ Player::Player() :
 	ObjectBase(ObjectTag::Player)
 {
 	modelHandle = AssetManager::GetMesh("data/player/AH-64 Apache.pmx");
-	camera = new HUDCamera();
+	camera = new CameraManager;
 	bullet = new BulletManager(ObjectTag::Player);
 	Init();
 		
@@ -40,8 +40,10 @@ void Player::Init()
 	velocity = VNorm(ToZAxis(matRot)) * -speed;
 	rotateNum = 0.0f;
 
-	camera->Init(pos, matRot, modelHandle, CockpitFrontSeat);
+	camera->Init(pos, matRot, modelHandle, CockpitRearSeat);
 	bullet->Init();
+
+	//visible = false;
 
 }
 
@@ -65,7 +67,7 @@ void Player::Update(float deltaTime)
 	BulletFire(deltaTime);
 
 	// ÉJÉÅÉâ.
-	camera->Update(pos, matRot, deltaTime);
+	camera->Update(pos, matRot);
 	//GetTransMat(MV1GetFrameLocalWorldMatrix(modelHandle, CockpitFrontSeat))
 	
 
@@ -126,6 +128,13 @@ void Player::Rotate(float deltaTime)
 		roll = 0.0f;
 	}
 	roll *= deltaTime;
+	épê®êßå‰ïΩçsÇ…Ç∑ÇÈÇ‹Ç≈
+	if (CheckHitKey(KEY_INPUT_P))
+	{
+		quat.x = quat.y = quat.z = 0.0f;
+		quat.t = 1.0f;
+
+	}
 
 	// âÒì]Ç≥ÇπÇÈ.
 	VECTOR yAxis = ToYAxis(mat);// yaw.
@@ -146,7 +155,7 @@ void Player::Movement(float deltaTime)
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)
 	{
 		
-		speed = 10;
+		speed = 30;
 	}
 #else
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)

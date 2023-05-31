@@ -84,7 +84,7 @@ void AssetManager::DeleteAllAsset()
 
 VECTOR AssetManager::GetFramePos(int modelHandle, int frameIndex)
 {
-	return GetTransMat(MV1GetFrameLocalMatrix(modelHandle, frameIndex));
+	return GetTransMat2Vec(MV1GetFrameLocalMatrix(modelHandle, frameIndex));
 }
 
 MATRIX AssetManager::GetFrameTransMatrix(int modelHandle, int frameIndex, float modelScale)
@@ -128,22 +128,7 @@ MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndex, fl
 
 	// 相対座標分の平行移動行列を取得.
 	MATRIX matTrans = GetFrameTransMatrix(modelHandle, frameIndex, modelScale);
-	//if (parentFrame != -2)
-	//{
-	//	//親子フレームの座標の取得.
-	//	VECTOR parentVec = GetFramePos(modelHandle, parentFrame);
-	//	VECTOR childVec = GetFramePos(modelHandle, frameIndex);
-
-	//	// 親を基準にした子の相対座標を取得.
-	//	VECTOR rerativPar2chi = VSub(childVec, parentVec);
-	//	// モデルの拡大率によって相対距離を修正.
-	//	rerativPar2chi = VScale(rerativPar2chi, modelScale);
-	//	matTrans = MGetTranslate(childVec);
-	//}
-	//else
-	//{
-	//	matTrans = MGetIdent();
-	//}
+	
 	
 	// それぞれの軸に沿って回転する行列を取得.
 	MATRIX matXAxis = MGetRotX(rotate.x);
@@ -168,7 +153,7 @@ MATRIX AssetManager::MV1GetFrameRotateMatrix(int modelHandle, int frameIndex, fl
 
 	}
 	// 取得した祖先たちの回転行列をより中枢のほうからかけて、平行移動のベクトルを補正する.
-	for (int i = matParentsRotates.size() - 1; i >= 0; i--)
+	for(int i = matParentsRotates.size() - 1; i >= 0; i--)
 	{
 		matTrans = MMult(matTrans, matParentsRotates[i]);
 	}

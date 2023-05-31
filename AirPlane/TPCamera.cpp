@@ -7,7 +7,7 @@ void TPCamera::Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int 
 	SetCameraPositionAndTargetAndUpVec(this->pos, targetPos, VNorm(ToYAxis(matRot)));
 }
 
-void TPCamera::Update(VECTOR pos, MATRIX matRot, float deltaTime)
+void TPCamera::Update(VECTOR pos, MATRIX matRot)
 {
 	VECTOR upVec = VGet(0.0f, 1.0f, 0.0f);
 	if (!CheckHitKey(KEY_INPUT_C))

@@ -128,7 +128,7 @@ void Player::Rotate(float deltaTime)
 		roll = 0.0f;
 	}
 	roll *= deltaTime;
-	p¨§Œä•½s‚É‚·‚é‚Ü‚Å
+	p¨§Œä•½s‚É‚·‚é‚Ü‚Åp¨‚ğ•Ï‚¦‚é
 	if (CheckHitKey(KEY_INPUT_P))
 	{
 		quat.x = quat.y = quat.z = 0.0f;

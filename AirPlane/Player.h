@@ -28,7 +28,10 @@ private:
     // 機体関係.
     VECTOR velocity; // 速度[m/s].
     const float Acceleration = 36.0f;// 加速度.
-    const float MaxSpeed = 2575.0f;// 最高速度.
+    const float MaxSpeed = 295.0f;// 最高速度[m/h].
+    const float MaxAltitude = 5400.0f;// 最高高度[m].
+    const float UpliftRate = 11.5f;// 垂直上昇率[m].
+    const float Weight = 7.0f;//重量[t] 
     const float Deceleration = 20.0f;// 減速度.
     const float StallSpeed = 220.0f;// 失速速度.
     const float NomalSpeed = 600.0f;// 通常速度.
@@ -37,12 +40,16 @@ private:
     const float DefaultDownwardAccel = 5.0f;
     const VECTOR InitPos = VGet(0.0f, 100.0f, 0.0f);// 初期位置.
     const float ModelScale = 0.08f;
-    const float YawSpeed     = 1.05f;
-    const float PitchSpeed   = 1.0f;
-    const float RollSpeed    = 1.8f;
+    const float YawSpeed = 1.05f;
+    const float PitchSpeed = 1.0f;
+
+    const float RollAccelAndDecel = 1.05f;
+
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
     const float G = 9.80665f;// 重力加速度[m/s2].
+    float gVelo = 0;
     float speed;
+    float power = 0;
     MATRIX mat;// ワールド座標.
     MATRIX matRot;// 回転行列.
     MATRIX matTrans;// 移動行列.
@@ -59,6 +66,9 @@ private:
     const int CockpitFrontSeat = 21;// コックピット前席.
     const int CockpitRearSeat = 22;// コックピット後席.
     float rotateNum;
+
+    // デバッグ系.
+    float valiable;
 };
 //http://noa1105.seesaa.net/article/239449116.html
 //http://www.f.waseda.jp/moriya/PUBLIC_HTML/education/classes/infomath6/applet/fractal/coord/

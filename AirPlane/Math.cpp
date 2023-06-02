@@ -353,3 +353,4 @@ MATRIX operator*=(MATRIX lhs, MATRIX rhs)
 	lhs = lhs * rhs;
 	return lhs;
 }
+

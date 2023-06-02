@@ -112,23 +112,26 @@ void Player::Rotate(float deltaTime)
 	pitch *= deltaTime;
 
 	// ÉçÅ[Éã.
+	
 	bool rollFlag = false;
 	if (CheckHitKey(KEY_INPUT_A))
 	{
-		roll = -RollSpeed;
+		roll = -RollAccelAndDecel;
 		rollFlag = true;
 	}
 	if (CheckHitKey(KEY_INPUT_D))
 	{
-		roll = RollSpeed;
+		roll = RollAccelAndDecel;
 		rollFlag = true;
 	}
 	if (!rollFlag)
 	{
 		roll = 0.0f;
+
 	}
-	roll *= deltaTime;
-	épê®êßå‰ïΩçsÇ…Ç∑ÇÈÇ‹Ç≈épê®ÇïœÇ¶ÇÈ
+	roll = roll * deltaTime;
+	valiable = deltaTime;
+	
 	if (CheckHitKey(KEY_INPUT_P))
 	{
 		quat.x = quat.y = quat.z = 0.0f;
@@ -151,11 +154,27 @@ void Player::Movement(float deltaTime)
 {
 	// â¡ë¨.
 #if 1
-	speed = 0;
-	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)
+	power = 0;
+	if (CheckHitKey(KEY_INPUT_LSHIFT) && power <= 100)
 	{
 		
-		speed = 30;
+		power = 50;
+	}
+	else
+	{
+		if (pos.y > 0)
+		{
+			gVelo -= G * deltaTime;
+		}
+	}
+	if (CheckHitKey(KEY_INPUT_LCONTROL) && power >= 0)
+	{
+		power -= 10;
+	}
+	
+	if (pos.y <= 0)
+	{
+		pos.y = 0;
 	}
 #else
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)
@@ -164,34 +183,18 @@ void Player::Movement(float deltaTime)
 		
 	}
 	// å∏ë¨.
-	else if (CheckHitKey(KEY_INPUT_LCONTROL) && speed >= StallSpeed)
-	{
-		speed -= Deceleration - G;
-	}
-	// í èÌë¨ìxÇ÷ñﬂÇ∑.
-	else if (!CheckHitKey(KEY_INPUT_LSHIFT) && !CheckHitKey(KEY_INPUT_LCONTROL))
-	{
-		if (speed <= NomalSpeed)
-		{
-			speed += Acceleration;
-			if (speed > NomalSpeed)
-			{
-				speed = NomalSpeed;
-			}
-		}
-		else if (speed >= NomalSpeed)
-		{
-			speed -= Deceleration;
-			if (speed < NomalSpeed)
-			{
-				speed = NomalSpeed;
-			}
-		}
-	}
+	
 #endif	
+	
+
 	// îΩâf.
-	velocity = VNorm(ToYAxis(matRot)) * speed;
+	velocity = VNorm(ToYAxis(matRot)) * power;
+	velocity.y += gVelo;
 	prePos += velocity * deltaTime;
+	if (prePos.y <= 0)
+	{
+		prePos.y = 0;
+	}
 	pos = prePos;
 	matTrans = MGetTranslate(pos);
 	mat = MMult(mat, matTrans);// áB.
@@ -230,9 +233,8 @@ void Player::Draw()
 {
 	int white = GetColor(255, 255, 255);
 	MV1DrawModel(modelHandle);
-	VECTOR a = MV1GetFramePosition(modelHandle, MainRotorFrame);
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "%f:%f:%f", a.x, a.y, a.z);
+	DrawFormatString(0, 20, white, "%f:%f:%f", velocity.y,  gVelo);
 	camera->DebagDraw();
 }
 

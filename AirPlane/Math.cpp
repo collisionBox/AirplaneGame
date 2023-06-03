@@ -205,15 +205,21 @@ QUATERNION operator*(QUATERNION q1, QUATERNION q2)
 	return ans;
 	
 }
-
+//-------------------------------------------------------------------------------
+// @brief w’è²‚ğw’èŠp‰ñ“]‚³‚¹‚é
+// @param[in] radian ‰ñ“]‚³‚¹‚éŠp“x
+// @param[in] Axis ‰ñ“]².
+//-------------------------------------------------------------------------------
 QUATERNION CreateRotationQuaternion(float radian, VECTOR Axis)
 {
 	QUATERNION ans;
 	float norm;
 	float ccc, sss;
 
+	//‰Šú‰».
 	ans.t = ans.x = ans.y = ans.z = 0.0f;
 
+	// ³‹K‰».
 	norm = Axis.x * Axis.x + Axis.y * Axis.y + Axis.z * Axis.z;
 	if (norm <= 0.0f)
 	{

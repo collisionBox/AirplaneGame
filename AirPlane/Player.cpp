@@ -91,7 +91,6 @@ void Player::Rotate(float deltaTime)
 	{
 		yaw = 0.0f;
 	}
-	yaw *= deltaTime;
 
 	// ピッチ.
 	bool pitchFlag = false;
@@ -109,44 +108,56 @@ void Player::Rotate(float deltaTime)
 	{
 		pitch = 0.0f;
 	}
-	pitch *= deltaTime;
 
 	// ロール.
-	
 	bool rollFlag = false;
 	if (CheckHitKey(KEY_INPUT_A))
 	{
-		roll = -RollAccelAndDecel;
+		roll += -RollAccelAndDecel;
 		rollFlag = true;
 	}
-	if (CheckHitKey(KEY_INPUT_D))
+	else if (CheckHitKey(KEY_INPUT_D))
 	{
-		roll = RollAccelAndDecel;
+		roll += RollAccelAndDecel;
 		rollFlag = true;
+	}
+	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)
+	{
+		roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
 	}
 	if (!rollFlag)
 	{
-		roll = 0.0f;
+	http://www7.plala.or.jp/kfb/program/stg2dvec.html
+		if (!IsNearAngle(VGet(0,1,0), ToYAxis(mat)))
+		{
+			
+		}
+		//roll = 0.0f;
 
 	}
-	roll = roll * deltaTime;
 	valiable = deltaTime;
-	
-	if (CheckHitKey(KEY_INPUT_P))
+	// クォータニオンから回転行列に変換.
+	VECTOR yAxis = ToYAxis(mat);// yaw.
+	quat = quat * CreateRotationQuaternion(ToRadian(yaw) * deltaTime, yAxis);
+	VECTOR xAxis = ToXAxis(mat);// pitch.
+	quat = quat * CreateRotationQuaternion(ToRadian(pitch) * deltaTime, xAxis);
+	VECTOR zAxis = ToZAxis(mat);// roll.
+	quat = quat * CreateRotationQuaternion(ToRadian(roll) * deltaTime, zAxis);
+	MATRIX matRotVel = QuaternionToMatrix(quat);
+	quat.x = quat.y = quat.z = 0.0f;
+	quat.t = 1.0f;
+
+	if (prePos.y <= 0.0f)
 	{
-		quat.x = quat.y = quat.z = 0.0f;
-		quat.t = 1.0f;
+	//	matRotVel = ( MInverse(MGetRotVec2(VGet(0.0f, 1.0f, 0.0f), ToYAxis(matRot))));
 
 	}
 
-	// 回転させる.
-	VECTOR yAxis = ToYAxis(mat);// yaw.
-	quat = quat * CreateRotationQuaternion(yaw, yAxis);
-	VECTOR xAxis = ToXAxis(mat);// pitch.
-	quat = quat * CreateRotationQuaternion(pitch, xAxis);
-	VECTOR zAxis = ToZAxis(mat);// roll.
-	quat = quat * CreateRotationQuaternion(roll, zAxis);
-	matRot = QuaternionToMatrix(quat);
+	if (CheckHitKey(KEY_INPUT_P)) 
+	{
+
+	}
+	matRot = MMult(matRot, matRotVel);
 	mat = MMult(mat, matRot);// ②.
 }
 
@@ -157,7 +168,6 @@ void Player::Movement(float deltaTime)
 	power = 0;
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && power <= 100)
 	{
-		
 		power = 50;
 	}
 	else
@@ -185,7 +195,6 @@ void Player::Movement(float deltaTime)
 	// 減速.
 	
 #endif	
-	
 
 	// 反映.
 	velocity = VNorm(ToYAxis(matRot)) * power;
@@ -194,6 +203,10 @@ void Player::Movement(float deltaTime)
 	if (prePos.y <= 0)
 	{
 		prePos.y = 0;
+	}
+	if (pos.y <= 0)
+	{
+		gVelo = 0;
 	}
 	pos = prePos;
 	matTrans = MGetTranslate(pos);
@@ -234,7 +247,7 @@ void Player::Draw()
 	int white = GetColor(255, 255, 255);
 	MV1DrawModel(modelHandle);
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "%f:%f:%f", velocity.y,  gVelo);
+	DrawFormatString(0, 20, white, "%f:%f:%f", ToYAxis(mat).y, roll);
 	camera->DebagDraw();
 }
 

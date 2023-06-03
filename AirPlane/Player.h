@@ -43,7 +43,8 @@ private:
     const float YawSpeed = 1.05f;
     const float PitchSpeed = 1.0f;
 
-    const float RollAccelAndDecel = 1.05f;
+    const float RollAccelAndDecel = 5.0f;
+    const float MaxRollSpeed = 105.0f;
 
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
     const float G = 9.80665f;// 重力加速度[m/s2].

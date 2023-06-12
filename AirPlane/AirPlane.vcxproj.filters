@@ -72,13 +72,13 @@
     <ClCompile Include="CameraBase.cpp">
       <Filter>ソース ファイル\Object\Camera\Base</Filter>
     </ClCompile>
-    <ClCompile Include="CameraManager.cpp">
-      <Filter>ソース ファイル\Object\Camera\Base</Filter>
-    </ClCompile>
     <ClCompile Include="BulletManager.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="TPCamera.cpp">
+      <Filter>ソース ファイル\Object\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
       <Filter>ソース ファイル\Object\Camera</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,9 +125,6 @@
     <ClInclude Include="HUDCamera.h">
       <Filter>ソース ファイル\Object\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="CameraManager.h">
-      <Filter>ソース ファイル\Object\Camera\Base</Filter>
-    </ClInclude>
     <ClInclude Include="CameraBase.h">
       <Filter>ソース ファイル\Object\Camera\Base</Filter>
     </ClInclude>
@@ -136,6 +133,12 @@
     </ClInclude>
     <ClInclude Include="TPCamera.h">
       <Filter>ソース ファイル\Object\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>ソース ファイル\Object\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

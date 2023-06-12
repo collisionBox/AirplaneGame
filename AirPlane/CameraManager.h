@@ -9,10 +9,13 @@ public:
 	CameraManager();
 	void Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int frameIndex);
 	void Update(VECTOR pos, MATRIX matRot);
+	void Draw(VECTOR pos, MATRIX matRot);
 	void DebagDraw();
+	const bool IsModelDraw() { return modelVisible; }
 
 private:
 	bool inputFlag;
+	bool modelVisible;
 	int cameraNum;
 	unordered_map<int, CameraBase*>camera;
 };

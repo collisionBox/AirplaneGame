@@ -2,7 +2,7 @@
 #include "DebugDraw.h"
 #include "ObjectManager.h"
 #include "AssetManager.h"
-
+#include "Config.h"
 #include "player.h"
 int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) 
 {
@@ -11,11 +11,7 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 
 	// 画面モードセット.
 	ChangeWindowMode(TRUE);// ウィンドウモードの変更.
-	const int WindowMagnification = 100;
-	const int WindowX = 16;
-	const int WindowY = 9;
-	const int ColorBitNum = 16;
-	SetGraphMode(WindowX * WindowMagnification, WindowY * WindowMagnification, ColorBitNum);
+	SetGraphMode(WindowX, WindowY, ColorBitNum);
 	SetBackgroundColor(70, 70, 70);
 
 	SetDrawScreen(DX_SCREEN_BACK);// 描画先を裏画面に変更する。

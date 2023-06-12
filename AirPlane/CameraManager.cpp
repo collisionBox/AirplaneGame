@@ -17,6 +17,7 @@ void CameraManager::Init(VECTOR pos, MATRIX matRot, const int modelHandle, const
 	}
 
 	inputFlag = false;
+	modelVisible = true;
 	cameraNum = 0;
 }
 
@@ -32,6 +33,14 @@ void CameraManager::Update(VECTOR pos, MATRIX matRot)
 			{
 				cameraNum = 0;
 			}
+			if (cameraNum == 1)
+			{
+				modelVisible = false;
+			}
+			else
+			{
+				modelVisible = true;
+			}
 		}
 		
 		inputFlag = true;
@@ -41,6 +50,11 @@ void CameraManager::Update(VECTOR pos, MATRIX matRot)
 		inputFlag = false;
 	}
 	camera[cameraNum]->Update(pos, matRot);
+}
+
+void CameraManager::Draw(VECTOR pos, MATRIX matRot)
+{
+	camera[cameraNum]->Draw(pos, matRot);
 }
 
 void CameraManager::DebagDraw()

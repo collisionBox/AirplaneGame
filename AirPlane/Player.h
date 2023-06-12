@@ -32,24 +32,28 @@ private:
     const float MaxAltitude = 5400.0f;// 最高高度[m].
     const float UpliftRate = 11.5f;// 垂直上昇率[m].
     const float Weight = 7.0f;//重量[t] 
-    const float Deceleration = 20.0f;// 減速度.
-    const float StallSpeed = 220.0f;// 失速速度.
-    const float NomalSpeed = 600.0f;// 通常速度.
+    //const float Deceleration = 20.0f;// 減速度.
+    //const float StallSpeed = 220.0f;// 失速速度.
+    //const float NomalSpeed = 600.0f;// 通常速度.
     const float DefaultUpwardAccel = 5.0f;
     const float DownwardAccel = 8.0f;
     const float DefaultDownwardAccel = 5.0f;
     const VECTOR InitPos = VGet(0.0f, 100.0f, 0.0f);// 初期位置.
-    const float ModelScale = 0.08f;
-    const float YawSpeed = 1.05f;
-    const float PitchSpeed = 1.0f;
+    const float ModelScale = 0.08f;// スケール.
+
+    const float YawAccelAndDecel = 3.0f;
+    const float MaxYawSpeed = 150.0f;
+
+    const float PitchAccelAndDecel = 2.0f;
+    const float MaxPichSpeed = 100.0f;
 
     const float RollAccelAndDecel = 5.0f;
     const float MaxRollSpeed = 105.0f;
 
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
     const float G = 9.80665f;// 重力加速度[m/s2].
-    float gVelo = 0;
-    float speed;
+    float gVelo = 0;// 重力速度.
+    //float speed;
     float power = 0;
     MATRIX mat;// ワールド座標.
     MATRIX matRot;// 回転行列.
@@ -57,6 +61,8 @@ private:
     MATRIX matLocal;// ローカル座標.
     float yaw, pitch, roll;
     QUATERNION quat;// 方向クォータニオン.
+    int prevMouseX, prevMouseY;
+
 
     // フレーム番号.
     const int MainRotorFrame = 8;// メインローターフレームナンバー.
@@ -69,7 +75,7 @@ private:
     float rotateNum;
 
     // デバッグ系.
-    float valiable;
+    float valiable[2];
 };
 //http://noa1105.seesaa.net/article/239449116.html
 //http://www.f.waseda.jp/moriya/PUBLIC_HTML/education/classes/infomath6/applet/fractal/coord/

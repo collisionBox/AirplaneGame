@@ -1,8 +1,7 @@
 #include "Player.h"
 #include "AssetManager.h"
 #include "ObjectManager.h"
-//#include "HUDCamera.h"
-//#include "TPCamera.h"
+#include "Config.h"
 #include "Math.h"
 #include <algorithm>
 #include <cmath>
@@ -36,8 +35,7 @@ void Player::Init()
 
 	prePos = pos = InitVec;
 	mat = MMult(mat, matRot);
-	speed = NomalSpeed;
-	velocity = VNorm(ToZAxis(matRot)) * -speed;
+	velocity = VNorm(ToZAxis(matRot));
 	rotateNum = 0.0f;
 
 	camera->Init(pos, matRot, modelHandle, CockpitRearSeat);
@@ -61,6 +59,7 @@ void Player::Update(float deltaTime)
 	// 反映.
 	MV1SetMatrix(modelHandle, mat);
 	
+	// ローターの回転.
 	RotorRotate(deltaTime);
 
 	// 射撃.
@@ -68,6 +67,14 @@ void Player::Update(float deltaTime)
 
 	// カメラ.
 	camera->Update(pos, matRot);
+	if (camera->IsModelDraw())
+	{
+		visible = true;
+	}
+	else
+	{
+		visible = false;
+	}
 	//GetTransMat(MV1GetFrameLocalWorldMatrix(modelHandle, CockpitFrontSeat))
 	
 
@@ -75,17 +82,22 @@ void Player::Update(float deltaTime)
 
 void Player::Rotate(float deltaTime)
 {
+#if 0
 	// ヨー.
 	bool yawFlag = false;
 	if (CheckHitKey(KEY_INPUT_E))
 	{
-		yaw = YawSpeed;
+		yaw += YawAccelAndDecel;
 		yawFlag = true;
 	}
 	if (CheckHitKey(KEY_INPUT_Q))
 	{
-		yaw = -YawSpeed;
+		yaw -= YawAccelAndDecel;
 		yawFlag = true;
+	}
+	if (yaw > MaxYawSpeed || yaw < -MaxYawSpeed)
+	{
+		yaw = MaxYawSpeed * ((yaw < 0) ? -1.0f : 1.0f);
 	}
 	if (!yawFlag)
 	{
@@ -96,20 +108,24 @@ void Player::Rotate(float deltaTime)
 	bool pitchFlag = false;
 	if (CheckHitKey(KEY_INPUT_W))
 	{
-		pitch = -PitchSpeed;
+		pitch -= PitchAccelAndDecel;
 		pitchFlag = true;
 	}
 	if (CheckHitKey(KEY_INPUT_S))
 	{
-		pitch = PitchSpeed;
+		pitch += PitchAccelAndDecel;
 		pitchFlag = true;
+	}
+	if (pitch > MaxPichSpeed || pitch < -MaxPichSpeed)
+	{
+		pitch = MaxPichSpeed * ((pitch < 0) ? -1.0f : 1.0f);
 	}
 	if (!pitchFlag)
 	{
 		pitch = 0.0f;
 	}
 
-	// ロール.
+	// ロール. 
 	bool rollFlag = false;
 	if (CheckHitKey(KEY_INPUT_A))
 	{
@@ -121,21 +137,44 @@ void Player::Rotate(float deltaTime)
 		roll += RollAccelAndDecel;
 		rollFlag = true;
 	}
-	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)
+	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)// 最大回転速度を超えないように.
 	{
 		roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
 	}
 	if (!rollFlag)
 	{
-	http://www7.plala.or.jp/kfb/program/stg2dvec.html
-		if (!IsNearAngle(VGet(0,1,0), ToYAxis(mat)))
+	//http://www7.plala.or.jp/kfb/program/stg2dvec.html
+		/*if (!IsNearAngle(VGet(0,1,0), ToYAxis(mat)))
 		{
 			
-		}
-		//roll = 0.0f;
+		}*/
+		roll = 0.0f;
 
 	}
-	valiable = deltaTime;
+#else
+	//どのタイミングで初期化から次の値に変わったか探す
+	const int WindowCenterX = WindowX / 2;
+	const int WindowCenterY = WindowY / 2;
+	int mouseX = 0;
+	int mouseY = 0;
+	GetMousePoint(&mouseX, &mouseY);
+	valiable[0] = WindowCenterX - mouseX;
+	valiable[1] = WindowCenterY - mouseY;
+	roll += WindowCenterX - mouseX;
+	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)// 最大回転速度を超えないように.
+	{
+		//roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
+	}
+
+	pitch += WindowCenterY - mouseY;
+	if (pitch > MaxPichSpeed || pitch < -MaxPichSpeed)
+	{
+		//pitch = MaxPichSpeed * ((pitch < 0) ? -1.0f : 1.0f);
+	}
+
+	SetMousePoint(WindowCenterX, WindowCenterY);
+#endif
+	//valiable = deltaTime;
 	// クォータニオンから回転行列に変換.
 	VECTOR yAxis = ToYAxis(mat);// yaw.
 	quat = quat * CreateRotationQuaternion(ToRadian(yaw) * deltaTime, yAxis);
@@ -187,10 +226,13 @@ void Player::Movement(float deltaTime)
 		pos.y = 0;
 	}
 #else
-	if (CheckHitKey(KEY_INPUT_LSHIFT) && speed <= MaxSpeed)
+	if (CheckHitKey(KEY_INPUT_W))
 	{
-		speed += Acceleration - G;
-		
+		power = 50;
+	}
+	if (CheckHitKey(KEY_INPUT_S))
+	{
+		power = 0;
 	}
 	// 減速.
 	
@@ -247,7 +289,8 @@ void Player::Draw()
 	int white = GetColor(255, 255, 255);
 	MV1DrawModel(modelHandle);
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "%f:%f:%f", ToYAxis(mat).y, roll);
+	DrawFormatString(0, 20, white, "%f:%f:%f", valiable[0], valiable[1]);
+	camera->Draw(pos, matRot);
 	camera->DebagDraw();
 }
 

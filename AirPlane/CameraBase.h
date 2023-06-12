@@ -1,11 +1,13 @@
 #pragma once
 #include "DxLib.h"
+#include <cmath>
 class CameraBase
 {
 public:
 	virtual void Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int frameIndex) = 0;// 初期化.
 	virtual void Update(VECTOR pos, MATRIX matRot) = 0;  // 更新処理
-	virtual void DebagDraw() {};
+	virtual void Draw(VECTOR pos, MATRIX matRot) {};
+	virtual void DebagDraw() {};// デバッグ用.
 
 protected:
 	void SetPos(const VECTOR set) { pos = set; }// 位置セット

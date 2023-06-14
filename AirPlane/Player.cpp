@@ -41,6 +41,7 @@ void Player::Init()
 	camera->Init(pos, matRot, modelHandle, CockpitRearSeat);
 	bullet->Init();
 
+	SetMousePoint(WindowX / 2, WindowY / 2);
 	//visible = false;
 
 }
@@ -67,14 +68,6 @@ void Player::Update(float deltaTime)
 
 	// カメラ.
 	camera->Update(pos, matRot);
-	if (camera->IsModelDraw())
-	{
-		visible = true;
-	}
-	else
-	{
-		visible = false;
-	}
 	//GetTransMat(MV1GetFrameLocalWorldMatrix(modelHandle, CockpitFrontSeat))
 	
 
@@ -152,7 +145,7 @@ void Player::Rotate(float deltaTime)
 
 	}
 #else
-	//どのタイミングで初期化から次の値に変わったか探す
+	
 	const int WindowCenterX = WindowX / 2;
 	const int WindowCenterY = WindowY / 2;
 	int mouseX = 0;
@@ -160,19 +153,39 @@ void Player::Rotate(float deltaTime)
 	GetMousePoint(&mouseX, &mouseY);
 	valiable[0] = WindowCenterX - mouseX;
 	valiable[1] = WindowCenterY - mouseY;
-	roll += WindowCenterX - mouseX;
+	roll = (WindowCenterX - mouseX) * mouseSensitivity;
 	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)// 最大回転速度を超えないように.
 	{
 		//roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
 	}
 
-	pitch += WindowCenterY - mouseY;
+	pitch = (mouseY - WindowCenterY) * mouseSensitivity;
 	if (pitch > MaxPichSpeed || pitch < -MaxPichSpeed)
 	{
 		//pitch = MaxPichSpeed * ((pitch < 0) ? -1.0f : 1.0f);
 	}
-
+	
 	SetMousePoint(WindowCenterX, WindowCenterY);
+
+	bool yawFlag = false;
+	if (CheckHitKey(KEY_INPUT_A))
+	{
+		yaw -= YawAccelAndDecel;
+		yawFlag = true;
+	}
+	if (CheckHitKey(KEY_INPUT_D))
+	{
+		yaw += YawAccelAndDecel;
+		yawFlag = true;
+	}
+	if (yaw > MaxYawSpeed || yaw < -MaxYawSpeed)
+	{
+		yaw = MaxYawSpeed * ((yaw < 0) ? -1.0f : 1.0f);
+	}
+	if (!yawFlag)
+	{
+		yaw = 0.0f;
+	}
 #endif
 	//valiable = deltaTime;
 	// クォータニオンから回転行列に変換.
@@ -203,7 +216,7 @@ void Player::Rotate(float deltaTime)
 void Player::Movement(float deltaTime)
 {
 	// 加速.
-#if 1
+#if 0
 	power = 0;
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && power <= 100)
 	{
@@ -226,13 +239,24 @@ void Player::Movement(float deltaTime)
 		pos.y = 0;
 	}
 #else
-	if (CheckHitKey(KEY_INPUT_W))
+	if (CheckHitKey(KEY_INPUT_W) && power <= 100)
 	{
-		power = 50;
+		power = 100;
 	}
-	if (CheckHitKey(KEY_INPUT_S))
+	else
 	{
-		power = 0;
+		if (power > 0)
+		{
+			power -= 10;
+		}
+		if (pos.y > 0)
+		{
+			gVelo -= G * deltaTime;
+		}
+	}
+	if (CheckHitKey(KEY_INPUT_S) && power >= 0)
+	{
+		power = -100;
 	}
 	// 減速.
 	
@@ -286,10 +310,14 @@ void Player::RotorRotate(float deltaTime)
 
 void Player::Draw()
 {
-	int white = GetColor(255, 255, 255);
-	MV1DrawModel(modelHandle);
+	const int white = GetColor(255, 255, 255);
+	if (camera->IsModelDraw())
+	{
+		MV1DrawModel(modelHandle);
+
+	}
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "%f:%f:%f", valiable[0], valiable[1]);
+	DrawFormatString(0, 20, white, "%f:%f:%f",velocity.x,velocity.y,velocity.x);
 	camera->Draw(pos, matRot);
 	camera->DebagDraw();
 }

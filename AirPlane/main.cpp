@@ -32,6 +32,10 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 	// ライトを設定.
 	int light = ChangeLightTypeDir(VGet(1.0f, -1.0f, 1.0f));
 
+	// コンフィグ.
+	Config::Initialize();
+	
+
 	// マネージャー生成.
 	ObjectManager::Initialize();
 	AssetManager::Initalize();
@@ -65,6 +69,7 @@ int WINAPI _stdcall WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_
 	ObjectManager::ReleseAllObj();
 	ObjectManager::Finalize();
 	AssetManager::Finalize();
+	Config::Finalize();
 	DxLib_End();
 	return 0;
 }

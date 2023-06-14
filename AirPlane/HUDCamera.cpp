@@ -23,17 +23,34 @@ void HUDCamera::Update(VECTOR pos, MATRIX matRot)
 
 void HUDCamera::Draw(VECTOR pos, MATRIX matRot)
 {
+	UI(pos, matRot);
 }
 
 void HUDCamera::UI(VECTOR pos, MATRIX matRot)
 {
-	SwivelMeter(pos, matRot);
+	Lectil(pos, matRot);
+	VirticalGyro(pos, matRot);
 }
 
-void HUDCamera::SwivelMeter(VECTOR pos, MATRIX matRot)
+void HUDCamera::VirticalGyro(VECTOR pos, MATRIX matRot)
 {
+	const float length = 200;
+	float posY = WindowY / 2 + 200;
 	float angle = VDot(VGet(0.0f, 1.0f, 0.0f), ToYAxis(matRot)) / (VSize(VGet(0.0f, 1.0f, 0.0f) * VSize(ToYAxis(matRot))));
-	DrawLine3D
+	DrawLineAA(WindowX / 2 - length, posY, WindowX / 2 + length, posY, Green);
+
+}
+
+void HUDCamera::Lectil(VECTOR pos, MATRIX matRot)
+{
+	const int CenterX = WindowX / 2;
+	const int CenterY = WindowY / 2;
+	const float Space = 15.0f;
+	const float length = 20.0f;
+	DrawLineAA(CenterX, CenterY - Space - length, CenterX, CenterY - Space, Green);// 12Žž.
+	DrawLineAA(CenterX, CenterY + Space, CenterX, CenterY + Space + length, Green);// 6Žž.
+	DrawLineAA(CenterX - Space - length, CenterY, CenterX - Space, CenterY, Green);// 9Žž.
+	DrawLineAA(CenterX + Space, CenterY, CenterX + Space + length, CenterY, Green);// 3Žž.
 }
 
 void HUDCamera::DebagDraw()

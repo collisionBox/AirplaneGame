@@ -2,7 +2,6 @@
 #include "ObjectBase.h"
 #include "CameraManager.h"
 #include "BulletManager.h"
-#include <memory>
 class Player :
     public ObjectBase
 {
@@ -51,8 +50,6 @@ private:
     const float MaxRollSpeed = 105.0f;
 
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
-    const float G = 9.80665f;// 重力加速度[m/s2].
-    float gVelo = 0;// 重力速度.
     //float speed;
     float power = 0;
     MATRIX mat;// ワールド座標.
@@ -72,6 +69,9 @@ private:
     const int ChainGunMuzzleFlame = 16;// チェーンガン銃口フレームナンバー.
     const int CockpitFrontSeat = 21;// コックピット前席.
     const int CockpitRearSeat = 22;// コックピット後席.
+    const int MissilepodR = 23;// 右ミサイルポッド.
+    const int MissilepodL = 24;// 左ミサイルポッド.
+
     float rotateNum;
 
     // デバッグ系.

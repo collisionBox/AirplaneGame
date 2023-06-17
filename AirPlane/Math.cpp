@@ -226,13 +226,13 @@ QUATERNION CreateRotationQuaternion(float radian, VECTOR Axis)
 		return ans;
 	}
 
-	norm = 1.0f / sqrt(norm);
+	norm = 1.0f / sqrtf(norm);
 	Axis.x *= norm;
 	Axis.y *= norm;
 	Axis.z *= norm;
 
-	ccc = cosf(0.5 * radian);
-	sss = sinf(0.5 * radian);
+	ccc = cosf(0.5f * radian);
+	sss = sinf(0.5f * radian);
 
 	ans.t = ccc;
 	ans.x = sss * Axis.x;
@@ -359,4 +359,12 @@ MATRIX operator*=(MATRIX lhs, MATRIX rhs)
 	lhs = lhs * rhs;
 	return lhs;
 }
-
+VECTOR M2Pos(MATRIX matrix)
+{
+	VECTOR ret;
+	ret.x = matrix.m[3][0];
+	ret.y = matrix.m[3][1];
+	ret.z = matrix.m[3][2];
+	
+	return ret;
+}

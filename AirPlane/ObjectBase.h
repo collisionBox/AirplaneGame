@@ -3,7 +3,7 @@
 #include "ObjectTag.h"
 #include "Collision.h"
 #include "CollisionType.h"
-
+#include "Config.h"
 class ObjectBase
 {
 public:

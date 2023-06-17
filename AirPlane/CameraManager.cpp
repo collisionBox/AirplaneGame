@@ -52,9 +52,9 @@ void CameraManager::Update(VECTOR pos, MATRIX matRot)
 	camera[cameraNum]->Update(pos, matRot);
 }
 
-void CameraManager::Draw(VECTOR pos, MATRIX matRot)
+void CameraManager::Draw(VECTOR pos, MATRIX matRot, VECTOR velocity)
 {
-	camera[cameraNum]->Draw(pos, matRot);
+	camera[cameraNum]->Draw(pos, matRot, velocity);
 }
 
 void CameraManager::DebagDraw()

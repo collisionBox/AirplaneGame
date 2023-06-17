@@ -9,7 +9,7 @@ public:
 	BulletManager(ObjectTag userTag);
 	~BulletManager();
 	void Init();
-	void Generater(VECTOR pos, MATRIX matDir);
+	void Generater(int modelHandle, int frameIndex, MATRIX matDir);
 
 private:
 	const int MaxBulletNum = 30;// ’e‚Ì“¯ˆ—Å‘å”.

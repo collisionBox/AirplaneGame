@@ -41,7 +41,7 @@ void Player::Init()
 	camera->Init(pos, matRot, modelHandle, CockpitRearSeat);
 	bullet->Init();
 
-	SetMousePoint(WindowX / 2, WindowY / 2);
+	//SetMousePoint(WindowX / 2, WindowY / 2);
 	//visible = false;
 
 }
@@ -75,7 +75,7 @@ void Player::Update(float deltaTime)
 
 void Player::Rotate(float deltaTime)
 {
-#if 0
+#if 1
 	// ヨー.
 	bool yawFlag = false;
 	if (CheckHitKey(KEY_INPUT_E))
@@ -113,7 +113,7 @@ void Player::Rotate(float deltaTime)
 	{
 		pitch = MaxPichSpeed * ((pitch < 0) ? -1.0f : 1.0f);
 	}
-	if (!pitchFlag)
+	if (!pitchFlag) 
 	{
 		pitch = 0.0f;
 	}
@@ -189,11 +189,11 @@ void Player::Rotate(float deltaTime)
 #endif
 	//valiable = deltaTime;
 	// クォータニオンから回転行列に変換.
-	VECTOR yAxis = ToYAxis(mat);// yaw.
+	VECTOR yAxis = ToYAxis(matRot);// yaw.
 	quat = quat * CreateRotationQuaternion(ToRadian(yaw) * deltaTime, yAxis);
-	VECTOR xAxis = ToXAxis(mat);// pitch.
+	VECTOR xAxis = ToXAxis(matRot);// pitch.
 	quat = quat * CreateRotationQuaternion(ToRadian(pitch) * deltaTime, xAxis);
-	VECTOR zAxis = ToZAxis(mat);// roll.
+	VECTOR zAxis = ToZAxis(matRot);// roll.
 	quat = quat * CreateRotationQuaternion(ToRadian(roll) * deltaTime, zAxis);
 	MATRIX matRotVel = QuaternionToMatrix(quat);
 	quat.x = quat.y = quat.z = 0.0f;
@@ -216,18 +216,11 @@ void Player::Rotate(float deltaTime)
 void Player::Movement(float deltaTime)
 {
 	// 加速.
-#if 0
+#if 1
 	power = 0;
 	if (CheckHitKey(KEY_INPUT_LSHIFT) && power <= 100)
 	{
 		power = 50;
-	}
-	else
-	{
-		if (pos.y > 0)
-		{
-			gVelo -= G * deltaTime;
-		}
 	}
 	if (CheckHitKey(KEY_INPUT_LCONTROL) && power >= 0)
 	{
@@ -264,15 +257,11 @@ void Player::Movement(float deltaTime)
 
 	// 反映.
 	velocity = VNorm(ToYAxis(matRot)) * power;
-	velocity.y += gVelo;
+	velocity.y += G;
 	prePos += velocity * deltaTime;
 	if (prePos.y <= 0)
 	{
 		prePos.y = 0;
-	}
-	if (pos.y <= 0)
-	{
-		gVelo = 0;
 	}
 	pos = prePos;
 	matTrans = MGetTranslate(pos);
@@ -284,7 +273,7 @@ void Player::BulletFire(float deltaTime)
 	intervalTime -= deltaTime;
 	if (intervalTime <= 0 && CheckHitKey(KEY_INPUT_SPACE))
 	{
-		bullet->Generater(prePos, matRot);
+		bullet->Generater(modelHandle, MissilepodL, matRot);
 		intervalTime = FiringInterval;
 	}
 
@@ -317,8 +306,10 @@ void Player::Draw()
 
 	}
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "%f:%f:%f",velocity.x,velocity.y,velocity.x);
-	camera->Draw(pos, matRot);
+	DrawFormatString(0, 20, white, "%f:%f:%f",ToYAxis(mat).x, ToYAxis(mat).y, ToYAxis(mat).z);
+	DrawLine3D(AssetManager::GetFramePos(modelHandle,CockpitRearSeat), AssetManager::GetFramePos(modelHandle, CockpitRearSeat) + ToZAxis(matRot) * -800, GetColor(255, 30, 30));
+
+	camera->Draw(pos, matRot, velocity);
 	camera->DebagDraw();
 }
 

@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include "ObjectManager.h"	
 #include "AssetManager.h"
-
+#include "HUDCamera.h"
 
 Bullet::Bullet(ObjectTag userTag) :
 	ObjectBase(ObjectTag::Bullet)
@@ -33,20 +33,25 @@ void Bullet::Init()
 	this->dir = this->pos = velocity = InitVec;
 	timeCount = DeadTime;
 	CollisionUpdate();
-
 }
 
 void Bullet::Update(float deltaTime)
 {
+	機体の重力を確認　ターゲットサークルの中に弾を範囲に入れる
 	Delete();
 
-	velocity = dir * -Speed * deltaTime;
+	velocity = ToZAxis(matRot) * -Speed * deltaTime;
+	velocity.y -= G;
 	prePos += velocity;
 	CollisionUpdate(prePos);
 	pos = prePos;
 	// 位置の更新.
-	MV1SetPosition(modelHandle, pos);
-	MV1SetRotationZYAxis(modelHandle, dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
+	/*MV1SetPosition(modelHandle, pos);
+	MV1SetRotationZYAxis(modelHandle, dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);*/
+	mat = MGetScale(VGet(modelScale, modelScale, modelScale));
+	mat = mat * matRot;
+	mat = mat * MGetTranslate(pos);
+	MV1SetMatrix(modelHandle, mat);
 
 	timeCount -= deltaTime;
 	if (timeCount <= 0)
@@ -55,23 +60,23 @@ void Bullet::Update(float deltaTime)
 	}
 }
 
-void Bullet::Generate(VECTOR pos, MATRIX matDir)
+void Bullet::Generate(int ModelHandle, int frameIndex, MATRIX matDir)
 {
-	this->pos = pos;
-	this->pos += ToXAxis(matDir) * PosCorrectionScale.x;
-	this->pos += ToYAxis(matDir) * PosCorrectionScale.y;
-	this->pos += ToZAxis(matDir) * PosCorrectionScale.z;
-
-	this->dir = ToZAxis(matDir);
-	prePos = this->pos;
-	MATRIX ZeroInAngle = MGetRotAxis(ToZAxis(matDir), CalculateAngle(pos, matDir));
-	dir = VTransform(dir, ZeroInAngle);
+	matTrans = MV1GetFrameLocalWorldMatrix(ModelHandle, frameIndex);
+	matRot = MGetRotAxis(ToYAxis(matDir), ToRadian(ZeroInAngle));
+	pos = M2Pos(matTrans);
+	prePos = pos;
 	timeCount = DeadTime;
 	visible = true;
 	permitUpdate = true;
 	CollisionUpdate();
-	MV1SetPosition(modelHandle, this->pos);
-	MV1SetRotationZYAxis(modelHandle, this->dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
+	mat = MGetScale(VGet(modelScale, modelScale, modelScale));
+	mat = mat * matRot;
+
+	mat = mat * matTrans;
+	MV1SetMatrix(modelHandle, mat);
+	//MV1SetPosition(modelHandle, this->pos);
+	//MV1SetRotationZYAxis(modelHandle, this->dir, VGet(0.0f, 1.0f, 0.0f), 0.0f);
 }
 
 

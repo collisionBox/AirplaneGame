@@ -19,7 +19,7 @@ void TPCamera::Update(VECTOR pos, MATRIX matRot)
 	SetCameraPositionAndTargetAndUpVec(this->pos, targetPos, upVec);
 }
 
-void TPCamera::Draw(VECTOR pos, MATRIX matRot)
+void TPCamera::Draw(VECTOR pos, MATRIX matRot,VECTOR velocity)
 {
 	
 }

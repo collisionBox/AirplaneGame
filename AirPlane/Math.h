@@ -84,3 +84,6 @@ VECTOR GetTransMat2Vec(MATRIX matrix);
 MATRIX operator*(MATRIX lhs, MATRIX rhs);
 
 MATRIX operator*=(MATRIX lhs, MATRIX rhs);
+
+// @brief MATRIX TO VECTOR pos.
+VECTOR M2Pos(MATRIX matrix);

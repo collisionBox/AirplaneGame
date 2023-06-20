@@ -257,7 +257,7 @@ void Player::Movement(float deltaTime)
 
 	// ”½‰f.
 	velocity = VNorm(ToYAxis(matRot)) * power;
-	velocity.y += G;
+	velocity.y -= G;
 	prePos += velocity * deltaTime;
 	if (prePos.y <= 0)
 	{
@@ -274,11 +274,10 @@ void Player::BulletFire(float deltaTime)
 	if (intervalTime <= 0 && CheckHitKey(KEY_INPUT_SPACE))
 	{
 		bullet->Generater(modelHandle, MissilepodL, matRot);
+		bullet->Generater(modelHandle, MissilepodR, matRot);
 		intervalTime = FiringInterval;
 	}
 
-
-	
 }
 
 void Player::RotorRotate(float deltaTime)

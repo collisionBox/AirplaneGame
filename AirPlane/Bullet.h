@@ -17,21 +17,16 @@ public:
 
 
 private:
-    float CalculateAngle(VECTOR airplanePos, MATRIX airplaneMatDir);// Šp“x‚ğZo.
     void Delete();// Á‚·ˆ—.
-    ObjectTag myTag;
+    ObjectTag myTag;  
     VECTOR velocity;
-    MATRIX mat;
-    MATRIX matRot;
-    MATRIX matTrans;
     const float modelScale = 0.04f;
-    const float ColRadius = 0.1f;// “–‚½‚è”»’è”¼Œa.
-    const float Speed = 1050.0f;// ’e‘¬.
-    const float DeadTime = 3.0f;
+    const float modelScaleY = 0.008f;
+    const float ColRadius = 0.07f;// ’e“ª“–‚½‚è”»’è”¼Œa.[m]
+    const float Speed = 444.000f;// ’e‘¬.[m/h]
+    const float DeadTime = 3.0f;// íœŠÔ.
+    const float BlastTime = 0.8f;// ”š”­”¼Œa—LŒøŠÔ.
+    const float AccelerationTime = 1.0f;// ‰Á‘¬ŠÔ.
     float timeCount;
-    const float DistanceOfCocpitAndPod = 7.473f;
-    const float DistanceOfBodyAndPod = 32.49f;
-    //const VECTOR PosCorrection =  AssetManager::GetFramePos()// eŒûˆÊ’u•â³.
-    const float ZeroInAngle = atanf((GunTargetingDistance + DistanceOfCocpitAndPod)/ DistanceOfBodyAndPod);
 };
 

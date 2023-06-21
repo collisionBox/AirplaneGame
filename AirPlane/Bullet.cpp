@@ -8,7 +8,7 @@ Bullet::Bullet(ObjectTag userTag) :
 {
 	// アセットマネージャーからモデルをロード.
 	modelHandle = AssetManager::GetMesh("data/beam.mv1");
-	MV1SetScale(modelHandle, VGet(modelScale, modelScaleY, modelScale));// サイズの変更.
+	MV1SetScale(modelHandle, VGet(modelScale, modelScale, modelScale));// サイズの変更.
 	myTag = userTag;
 	Init();
 	// 当たり判定球セット.

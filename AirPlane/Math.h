@@ -40,9 +40,6 @@ VECTOR RotateForAimVecYAxis(const VECTOR& nowVec, const VECTOR& aimVec, float de
 // @brief 度数法→弧度法
 float ToRadian(float degree);
 
-// @brief ベクトルの大きさを求める.
-float VectorSize(VECTOR& vec);
-
 
 // 参考サイト:http://noa1105.seesaa.net/article/239449116.html
 typedef struct

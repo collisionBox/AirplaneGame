@@ -67,7 +67,7 @@ void Player::Update(float deltaTime)
 	BulletFire(deltaTime);
 
 	// ƒJƒƒ‰.
-	camera->Update(pos, matRot);
+	camera->Update(MV1GetFramePosition(modelHandle, 1), matRot);
 	//GetTransMat(MV1GetFrameLocalWorldMatrix(modelHandle, CockpitFrontSeat))
 	
 
@@ -306,7 +306,6 @@ void Player::Draw()
 	}
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
 	DrawFormatString(0, 20, white, "%f:%f:%f",ToYAxis(mat).x, ToYAxis(mat).y, ToYAxis(mat).z);
-	DrawLine3D(AssetManager::GetFramePos(modelHandle,CockpitRearSeat), AssetManager::GetFramePos(modelHandle, CockpitRearSeat) + ToZAxis(matRot) * -800, GetColor(255, 30, 30));
 
 	camera->Draw(pos, matRot, velocity);
 	camera->DebagDraw();

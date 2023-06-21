@@ -34,7 +34,6 @@ void BulletManager::Generater(int modelHandle, int frameIndex, MATRIX matDir)
 		if (!ver->GetPermitUpdate())
 		{
 			ver->Generate(modelHandle, frameIndex, matDir);
-			bulletCounter++;
 			break;
 		}
 	}

@@ -114,7 +114,7 @@ MATRIX operator-(const MATRIX& lhs, MATRIX rhs)
 bool IsNearAngle(const VECTOR& v1, const VECTOR& v2)
 {
 	float dot = VDot(v1, v2);
-	if (dot > 0.99f)
+	if (dot > 0.999f)
 	{
 		return true;
 	}
@@ -155,6 +155,12 @@ VECTOR RotateForAimVecYAxis(const VECTOR& nowVec, const VECTOR& aimVec, float de
 	VECTOR rotVec;
 	rotVec = VTransform(nowVec, yrotMat);
 
+	float dot = VDot(rotVec, aimVec);ドットが角度以下なら
+	if ()
+	{
+		rotVec = aimVec;
+	}
+
 	return rotVec;
 }
 
@@ -164,10 +170,6 @@ float ToRadian(float degree)
 	return degree * DX_PI_F / 180.0f;
 }
 
-float VectorSize(VECTOR& vec)
-{
-	return sqrtf((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z));
-}
 
 QUATERNION operator*(QUATERNION q1, QUATERNION q2)
 {

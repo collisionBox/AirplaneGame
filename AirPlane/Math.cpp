@@ -164,6 +164,10 @@ float ToRadian(float degree)
 	return degree * DX_PI_F / 180.0f;
 }
 
+float ToDegree(float radian)
+{
+	return radian * (180 / DX_PI_F);
+}
 
 QUATERNION operator*(QUATERNION q1, QUATERNION q2)
 {

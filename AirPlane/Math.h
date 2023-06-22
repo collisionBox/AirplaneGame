@@ -40,6 +40,9 @@ VECTOR RotateForAimVecYAxis(const VECTOR& nowVec, const VECTOR& aimVec, float de
 // @brief 度数法→弧度法
 float ToRadian(float degree);
 
+// @breif 弧度法→度数法.
+float ToDegree(float radian);
+
 
 // 参考サイト:http://noa1105.seesaa.net/article/239449116.html
 typedef struct

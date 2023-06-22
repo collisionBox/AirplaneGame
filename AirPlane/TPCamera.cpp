@@ -20,11 +20,25 @@ void TPCamera::Update(VECTOR pos, MATRIX matRot)
 	aimDir.y = 0;
 	float dot = VDot(VGet(dir.x, 0, dir.z), aimDir);
 	float angle = FormedAngle(VGet(dir.x, 0, dir.z), aimDir);
-	valiable = angle;
+	valiable = ToDegree(angle);
 	if(angle > 0)
 	{
-		dir = RotateForAimVecYAxis(VGet(dir.x, 0, dir.z), aimDir, angle);
+		if (angle <= ToRadian(MaxAngle))
+		{
+			dir = RotateForAimVecYAxis(VGet(dir.x, 0, dir.z), aimDir, angle);
+		}
+		else
+		{
+			VECTOR preDir = RotateForAimVecYAxis(aimDir,VGet(dir.x, 0, dir.z), MaxAngle);
+			dir.x = preDir.x;
+			dir.z = preDir.z;
+		}
 
+		if (angle < Epsilon)
+		{
+			dir.x = aimDir.x;
+			dir.z = aimDir.z;
+		}
 	}
 	this->pos = dir * OffsetLen;
 	this->pos.y = OffsetY;

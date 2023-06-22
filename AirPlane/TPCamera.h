@@ -15,7 +15,8 @@ private:
     const float OffsetY = 120.0f;
     const float OffsetX = sqrtf(OffsetLen * OffsetLen - OffsetY * OffsetY);
     const float OffsetAngle = ToRadian(40.0f);
-
+    const float Epsilon = 0.001f;// åÎç∑ï‚ê≥.
+    const float MaxAngle = 60.0f;
     float valiable;
 };
 

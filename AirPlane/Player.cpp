@@ -156,13 +156,13 @@ void Player::Rotate(float deltaTime)
 	roll = (WindowCenterX - mouseX) * mouseSensitivity;
 	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)// Å‘å‰ñ“]‘¬“x‚ð’´‚¦‚È‚¢‚æ‚¤‚É.
 	{
-		//roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
+		roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
 	}
 
 	pitch = (mouseY - WindowCenterY) * mouseSensitivity;
 	if (pitch > MaxPichSpeed || pitch < -MaxPichSpeed)
 	{
-		//pitch = MaxPichSpeed * ((pitch < 0) ? -1.0f : 1.0f);
+		pitch = MaxPichSpeed * ((pitch < 0) ? -1.0f : 1.0f);
 	}
 	
 	SetMousePoint(WindowCenterX, WindowCenterY);

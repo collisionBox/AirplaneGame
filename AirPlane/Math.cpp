@@ -155,12 +155,6 @@ VECTOR RotateForAimVecYAxis(const VECTOR& nowVec, const VECTOR& aimVec, float de
 	VECTOR rotVec;
 	rotVec = VTransform(nowVec, yrotMat);
 
-	float dot = VDot(rotVec, aimVec);ドットが角度以下なら
-	if ()
-	{
-		rotVec = aimVec;
-	}
-
 	return rotVec;
 }
 
@@ -368,5 +362,15 @@ VECTOR M2Pos(MATRIX matrix)
 	ret.y = matrix.m[3][1];
 	ret.z = matrix.m[3][2];
 	
+	return ret;
+}
+
+float FormedAngle(const VECTOR& v1, const VECTOR& v2)
+{
+	float dot = VDot(v1, v2);
+	float sizeA = VSize(v1);
+	float sizeB = VSize(v2);
+	float ret = acosf(dot / (sizeA * sizeB));
+
 	return ret;
 }

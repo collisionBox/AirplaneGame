@@ -71,8 +71,6 @@ QUATERNION QNorm(QUATERNION in);
 
 VECTOR QtoV(QUATERNION in);// ë ñ⁄ÇæÅI.
 
-const MATRIX InitMat = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-
 VECTOR MtoV(MATRIX mat);
 
 VECTOR GetTransMat2Vec(MATRIX matrix);
@@ -84,3 +82,5 @@ MATRIX operator*=(MATRIX lhs, MATRIX rhs);
 
 // @brief MATRIX TO VECTOR pos.
 VECTOR M2Pos(MATRIX matrix);
+
+float FormedAngle(const VECTOR& v1, const VECTOR& v2);

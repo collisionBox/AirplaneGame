@@ -14,13 +14,11 @@ void TPCamera::Update(VECTOR pos, MATRIX matRot)
 	
 	}
 
-
 	targetPos = pos;
+
 	VECTOR aimDir = ToZAxis(matRot);
-	aimDir.y = 0;
-	float dot = VDot(VGet(dir.x, 0, dir.z), aimDir);
+	aimDir.y = 0;// •½–Ê‚Æ‚µ‚ÄŒvŽZ‚·‚é‚½‚ß.
 	float angle = FormedAngle(VGet(dir.x, 0, dir.z), aimDir);
-	valiable = ToDegree(angle);
 	if(angle > 0)
 	{
 		if (angle <= ToRadian(MaxAngle))

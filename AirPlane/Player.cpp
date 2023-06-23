@@ -300,7 +300,7 @@ void Player::RotorRotate(float deltaTime)
 	MV1SetFrameUserLocalMatrix(modelHandle, MainRotorFrame, matMainRotor);
 	MV1SetFrameUserLocalMatrix(modelHandle, TailRotorFrame, matTailRotor);
 	rotateNum++;
-	if (rotateNum > 360.0f)
+	if (rotateNum >= 360.0f)
 	{
 		rotateNum = 0.0f;
 	}

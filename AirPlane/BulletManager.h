@@ -12,7 +12,7 @@ public:
 	void Generater(int modelHandle, int frameIndex, MATRIX matDir);
 
 private:
-	const int MaxBulletNum = 50;// ’e‚Ì“¯ˆ—Å‘å”.
+	const int MaxBulletNum = 55;// ’e‚Ì“¯ˆ—Å‘å”.
 	vector<Bullet*> bullet;
 
 };

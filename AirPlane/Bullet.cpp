@@ -31,6 +31,7 @@ void Bullet::Init()
 	visible = false;
 	permitUpdate = false;
 	this->dir = this->pos = velocity = InitVec;
+	speed = 0;
 	timeCount = 0.0f;
 	CollisionUpdate();
 }
@@ -38,11 +39,16 @@ void Bullet::Init()
 void Bullet::Update(float deltaTime)
 {
 
-	velocity = dir * -Speed;
-	if (timeCount >= AccelerationTime)
+	if (timeCount <= AccelerationTime)
 	{
-		velocity.y -= G;
+		speed += acceleration;
 	}
+	else
+	{
+ 		velocity.y -= G;
+	}
+	velocity = dir * -speed;
+
 	Delete();
 	prePos += velocity * deltaTime;
 	CollisionUpdate(prePos);
@@ -57,6 +63,7 @@ void Bullet::Generate(int ModelHandle, int frameIndex, MATRIX matDir)
 	pos = MV1GetFramePosition(ModelHandle, frameIndex);
 	prePos = pos;
 	dir = ToZAxis(matDir);
+	speed = 0.0f;
 	timeCount = 0.0f;
 	visible = true;
 	permitUpdate = true;

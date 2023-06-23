@@ -20,9 +20,12 @@ private:
     void Delete();// Á‚·ˆ—.
     ObjectTag myTag;  
     VECTOR velocity;
-    const float modelScale = 0.02f;
+    const float modelScale = 0.2f;
     const float ColRadius = 0.5f;// ’e“ª“–‚½‚è”»’è”¼Œa.[m]
-    const float Speed = 44400.0f;// ’e‘¬.[m/h]
+    //const float Speed = 44400.0f;// ’e‘¬.[m/h]
+    const float MaxSpeed = 740.0f;// ’e‘¬.[m/s]
+    const float acceleration = 740.0f;
+    float speed;
     const float DeadTime = 3.0f;// íœŠÔ.
     const float BlastTime = 0.8f;// ”š”­”¼Œa—LŒøŠÔ.
     const float AccelerationTime = 1.0f;// ‰Á‘¬ŠÔ.

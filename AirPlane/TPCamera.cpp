@@ -10,14 +10,11 @@ void TPCamera::Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int 
 void TPCamera::Update(VECTOR pos, MATRIX matRot, float deltaTime)
 {
 	targetPos = pos;
-	VECTOR nowPos = this->pos;
-	nowPos.y = 0;
 	VECTOR aimPos = targetPos + ToZAxis(matRot) * OffsetX;
-	aimPos.y = 0;
 	VECTOR posMoveDir = aimPos - this->pos;
-
 	this->pos += posMoveDir * SpringStrength * deltaTime;
 	this->pos.y = pos.y + OffsetY;
+
 	if (!CheckHitKey(KEY_INPUT_C))
 	{
 
@@ -34,5 +31,4 @@ void TPCamera::Draw(VECTOR pos, MATRIX matRot,VECTOR velocity)
 void TPCamera::DebagDraw()
 {
 	int white = GetColor(255, 255, 255);
-	DrawFormatString(10, 100, white, "%f", valiable);
 }

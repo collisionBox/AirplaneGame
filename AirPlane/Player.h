@@ -14,6 +14,7 @@ public:
     void OnCollisionEnter(const ObjectBase* other);
 private:
     void Rotate(float deltaTime);
+    void RotateDecel(float& axis, float deceleration);
     void Movement(float deltaTime);
     void BulletFire(float deltaTime);
     void RotorRotate(float deltaTime);

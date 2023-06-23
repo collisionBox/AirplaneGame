@@ -94,7 +94,7 @@ void Player::Rotate(float deltaTime)
 	}
 	if (!yawFlag)
 	{
-		yaw = 0.0f;
+		RotateDecel(yaw, YawAccelAndDecel);
 	}
 
 	// ピッチ.
@@ -115,7 +115,7 @@ void Player::Rotate(float deltaTime)
 	}
 	if (!pitchFlag) 
 	{
-		pitch = 0.0f;
+		RotateDecel(pitch, PitchAccelAndDecel);
 	}
 
 	// ロール. 
@@ -136,12 +136,7 @@ void Player::Rotate(float deltaTime)
 	}
 	if (!rollFlag)
 	{
-	//http://www7.plala.or.jp/kfb/program/stg2dvec.html
-		/*if (!IsNearAngle(VGet(0,1,0), ToYAxis(mat)))
-		{
-			
-		}*/
-		roll = 0.0f;
+		RotateDecel(roll, RollAccelAndDecel);
 
 	}
 #else
@@ -211,6 +206,24 @@ void Player::Rotate(float deltaTime)
 	}
 	matRot = MMult(matRot, matRotVel);
 	mat = MMult(mat, matRot);// ②.
+}
+
+void Player::RotateDecel(float& axis, float deceleration)
+{
+	if (axis < 0)
+	{
+		axis += deceleration;
+	}
+	else if(axis > 0)
+	{
+		axis -= deceleration;
+	}
+
+	if (axis <= deceleration && axis >= deceleration)
+	{
+		axis = 0;
+	}
+
 }
 
 void Player::Movement(float deltaTime)
@@ -305,7 +318,7 @@ void Player::Draw()
 
 	}
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "%f:%f:%f",ToYAxis(mat).x, ToYAxis(mat).y, ToYAxis(mat).z);
+	DrawFormatString(0, 20, white, "p:%f r:%f y:%f",pitch, roll, yaw);
 
 	camera->Draw(pos, matRot, velocity);
 	camera->DebagDraw();

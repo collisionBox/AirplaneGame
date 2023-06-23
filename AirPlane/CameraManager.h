@@ -8,7 +8,7 @@ class CameraManager
 public:
 	CameraManager();
 	void Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int frameIndex);
-	void Update(VECTOR pos, MATRIX matRot);
+	void Update(VECTOR pos, MATRIX matRot, float deltaTime);
 	void Draw(VECTOR pos, MATRIX matRot, VECTOR velocity);
 	void DebagDraw();
 	const bool IsModelDraw() { return modelVisible; }

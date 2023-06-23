@@ -158,6 +158,26 @@ VECTOR RotateForAimVecYAxis(const VECTOR& nowVec, const VECTOR& aimVec, float de
 	return rotVec;
 }
 
+//-------------------------------------------------------------------------------
+// @brief nowVecから aimVecに向かってdegreeVerociyの速度でY回転する.
+// @param[in] nowVec 現在の方向ベクトル
+// @param[in] aimVec 目標方向ベクトル
+//-------------------------------------------------------------------------------
+VECTOR RotateForAimVecYAxisRad(const VECTOR& nowVec, const VECTOR& aimVec, float radianvVelocity)
+{
+	// 角速度（度数）をラジアン角に変換、右回りか左回りかを調べる
+	radianvVelocity *= CalcRotationDirectionYAxis(nowVec, aimVec);
+
+	// Y軸回転行列を作成する
+	MATRIX yrotMat = MGetRotY(radianvVelocity);
+
+	// Y軸回転する
+	VECTOR rotVec;
+	rotVec = VTransform(nowVec, yrotMat);
+
+	return rotVec;
+}
+
 
 float ToRadian(float degree)
 {

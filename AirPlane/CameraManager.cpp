@@ -21,7 +21,7 @@ void CameraManager::Init(VECTOR pos, MATRIX matRot, const int modelHandle, const
 	cameraNum = 0;
 }
 
-void CameraManager::Update(VECTOR pos, MATRIX matRot)
+void CameraManager::Update(VECTOR pos, MATRIX matRot, float deltaTime)
 {
 	
 	if (CheckHitKey(KEY_INPUT_V))
@@ -49,7 +49,7 @@ void CameraManager::Update(VECTOR pos, MATRIX matRot)
 	{
 		inputFlag = false;
 	}
-	camera[cameraNum]->Update(pos, matRot);
+	camera[cameraNum]->Update(pos, matRot, deltaTime);
 }
 
 void CameraManager::Draw(VECTOR pos, MATRIX matRot, VECTOR velocity)

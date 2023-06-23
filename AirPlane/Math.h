@@ -37,6 +37,9 @@ float CalcRotationDirectionYAxis(const VECTOR& nowVec, const VECTOR& dirVec);
 // @brief nowVecから aimVecに向かってdegreeVerociyの速度でY回転する.
 VECTOR RotateForAimVecYAxis(const VECTOR& nowVec, const VECTOR& aimVec, float degreeVerocity);
 
+// @brief nowVecから aimVecに向かってradianVerociyの速度でY回転する.
+VECTOR RotateForAimVecYAxisRad(const VECTOR& nowVec, const VECTOR& aimVec, float radianvVelocity);
+
 // @brief 度数法→弧度法
 float ToRadian(float degree);
 

@@ -67,7 +67,7 @@ void Player::Update(float deltaTime)
 	BulletFire(deltaTime);
 
 	// ƒJƒƒ‰.
-	camera->Update(MV1GetFramePosition(modelHandle, 1), matRot);
+	camera->Update(MV1GetFramePosition(modelHandle, 1), matRot, deltaTime);
 	//GetTransMat(MV1GetFrameLocalWorldMatrix(modelHandle, CockpitFrontSeat))
 	
 

@@ -11,7 +11,7 @@ void HUDCamera::Init(VECTOR pos, MATRIX matRot, int modelHandle, int frameIndex)
 	FrameIndex = frameIndex;
 }
 
-void HUDCamera::Update(VECTOR pos, MATRIX matRot)
+void HUDCamera::Update(VECTOR pos, MATRIX matRot, float deltaTime)
 {
 	this->pos = GetTransMat2Vec(MV1GetFrameLocalWorldMatrix(ModelHandle, FrameIndex));
 	this->pos += ToYAxis(matRot) * AjustY;

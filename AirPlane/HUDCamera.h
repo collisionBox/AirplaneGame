@@ -8,7 +8,7 @@ class HUDCamera :
 public: 
     static HUDCamera GetInstance() { HUDCamera Instance; return Instance; }
     void Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int frameIndex)override;
-    void Update(VECTOR pos, MATRIX matRot)override;
+    void Update(VECTOR pos, MATRIX matRot, float deltaTime)override;
     void Draw(VECTOR pos, MATRIX matRot, VECTOR velocity)override;
     void UI(VECTOR pos, MATRIX matRot, VECTOR velocity);
     const VECTOR GetPos()const { return pos; }

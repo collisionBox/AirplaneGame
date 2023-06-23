@@ -7,39 +7,21 @@ void TPCamera::Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int 
 	dir.y = 0.0f;
 	SetCameraPositionAndTarget_UpVecY(this->pos, targetPos);
 }
-void TPCamera::Update(VECTOR pos, MATRIX matRot)
+void TPCamera::Update(VECTOR pos, MATRIX matRot, float deltaTime)
 {
+	targetPos = pos;
+	VECTOR nowPos = this->pos;
+	nowPos.y = 0;
+	VECTOR aimPos = targetPos + ToZAxis(matRot) * OffsetX;
+	aimPos.y = 0;
+	VECTOR posMoveDir = aimPos - this->pos;
+
+	this->pos += posMoveDir * SpringStrength * deltaTime;
+	this->pos.y = pos.y + OffsetY;
 	if (!CheckHitKey(KEY_INPUT_C))
 	{
-	
+
 	}
-
-	targetPos = pos;
-
-	VECTOR aimDir = ToZAxis(matRot);
-	aimDir.y = 0;// •½–Ê‚Æ‚µ‚ÄŒvŽZ‚·‚é‚½‚ß.
-	float angle = FormedAngle(VGet(dir.x, 0, dir.z), aimDir);
-	if(angle > 0)
-	{
-		if (angle <= ToRadian(MaxAngle))
-		{
-			dir = RotateForAimVecYAxis(VGet(dir.x, 0, dir.z), aimDir, angle);
-		}
-		else
-		{
-			VECTOR preDir = RotateForAimVecYAxis(aimDir,VGet(dir.x, 0, dir.z), MaxAngle);
-			dir.x = preDir.x;
-			dir.z = preDir.z;
-		}
-
-		if (angle < Epsilon)
-		{
-			dir.x = aimDir.x;
-			dir.z = aimDir.z;
-		}
-	}
-	this->pos = dir * OffsetLen;
-	this->pos.y = OffsetY;
 	SetCameraPositionAndTarget_UpVecY(this->pos, targetPos);
 
 }

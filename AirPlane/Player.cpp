@@ -75,7 +75,7 @@ void Player::Update(float deltaTime)
 
 void Player::Rotate(float deltaTime)
 {
-#if 1
+#if 0
 	// ヨー.
 	bool yawFlag = false;
 	if (CheckHitKey(KEY_INPUT_E))
@@ -148,39 +148,80 @@ void Player::Rotate(float deltaTime)
 	GetMousePoint(&mouseX, &mouseY);
 	valiable[0] = WindowCenterX - mouseX;
 	valiable[1] = WindowCenterY - mouseY;
-	roll = (WindowCenterX - mouseX) * mouseSensitivity;
-	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)// 最大回転速度を超えないように.
-	{
-		roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
-	}
 
-	pitch = (mouseY - WindowCenterY) * mouseSensitivity;
+	float pitchAmount = (WindowCenterY - mouseY) * mouseSensitivity;
+	float yawAmount = (WindowCenterX - mouseX) * mouseSensitivity;
+
+	bool pitchFlag = false;
+	if (abs(pitch) <= abs(pitchAmount))
+	{
+		if (pitchAmount > 0)
+		{
+			pitch += PitchAccelAndDecel;
+			pitchFlag = true;
+		}
+		else if (pitchAmount < 0)
+		{
+			pitch -= PitchAccelAndDecel;
+			pitchFlag = true;
+		}
+	}
 	if (pitch > MaxPichSpeed || pitch < -MaxPichSpeed)
 	{
-		pitch = MaxPichSpeed * ((pitch < 0) ? -1.0f : 1.0f);
+		pitch = MaxPichSpeed * ((pitch > 0) ? 1.0f : -1.0f);
 	}
-	
-	SetMousePoint(WindowCenterX, WindowCenterY);
+	if (!pitchFlag)
+	{
+		RotateDecel(pitch, PitchAccelAndDecel);
+	}
 
 	bool yawFlag = false;
-	if (CheckHitKey(KEY_INPUT_A))
+	if (abs(yaw) <= abs(yawAmount))
 	{
-		yaw -= YawAccelAndDecel;
-		yawFlag = true;
+		if (yawAmount < 0)
+		{
+			yaw += YawAccelAndDecel;
+			yawFlag = true;
+		}
+		else if (yawAmount > 0)
+		{
+			yaw -= YawAccelAndDecel;
+			yawFlag = true;
+		}
 	}
-	if (CheckHitKey(KEY_INPUT_D))
-	{
-		yaw += YawAccelAndDecel;
-		yawFlag = true;
-	}
+	
 	if (yaw > MaxYawSpeed || yaw < -MaxYawSpeed)
 	{
 		yaw = MaxYawSpeed * ((yaw < 0) ? -1.0f : 1.0f);
 	}
 	if (!yawFlag)
 	{
-		yaw = 0.0f;
+		RotateDecel(yaw, YawAccelAndDecel);
 	}
+
+	SetMousePoint(WindowCenterX, WindowCenterY);
+	// ロール. 
+	bool rollFlag = false;
+	if (CheckHitKey(KEY_INPUT_A))
+	{
+		roll += -RollAccelAndDecel;
+		rollFlag = true;
+	}
+	else if (CheckHitKey(KEY_INPUT_D))
+	{
+		roll += RollAccelAndDecel;
+		rollFlag = true;
+	}
+	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)// 最大回転速度を超えないように.
+	{
+		roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
+	}
+	if (!rollFlag)
+	{
+		RotateDecel(roll, RollAccelAndDecel);
+
+	}
+
 #endif
 	//valiable = deltaTime;
 	// クォータニオンから回転行列に変換.
@@ -202,7 +243,7 @@ void Player::Rotate(float deltaTime)
 
 	if (CheckHitKey(KEY_INPUT_P)) 
 	{
-
+		matRotVel = (MInverse(MGetRotVec2(VGet(0.0f, 1.0f, 0.0f), ToYAxis(matRot))));
 	}
 	matRot = MMult(matRot, matRotVel);
 	mat = MMult(mat, matRot);// ②.

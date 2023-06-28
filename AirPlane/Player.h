@@ -27,6 +27,7 @@ private:
     
     // 機体関係.
     VECTOR velocity; // 速度[m/s].
+    VECTOR worldVel;// ワールド速度.
     const float Acceleration = 36.0f;// 加速度.
     const float MaxSpeed = 295.0f;// 最高速度[m/h].
     const float MaxAltitude = 5400.0f;// 最高高度[m].
@@ -77,6 +78,7 @@ private:
 
     // デバッグ系.
     float valiable[2];
+    VECTOR qwe;
 };
 //http://noa1105.seesaa.net/article/239449116.html
 //http://www.f.waseda.jp/moriya/PUBLIC_HTML/education/classes/infomath6/applet/fractal/coord/

@@ -27,7 +27,7 @@ void HUDCamera::Draw(VECTOR pos, MATRIX matRot, VECTOR velocity)
 void HUDCamera::UI(VECTOR pos, MATRIX matRot, VECTOR velocity)
 {
 	Lectil(pos, matRot);
-	VirticalGyro(pos, matRot);
+	//VirticalGyro(pos, matRot);
 	Altimeter(pos.y);
 	ElevationMeter(velocity);
 	SpeedMeter(velocity);
@@ -35,7 +35,17 @@ void HUDCamera::UI(VECTOR pos, MATRIX matRot, VECTOR velocity)
 
 void HUDCamera::VirticalGyro(VECTOR pos, MATRIX matRot)
 {
-	const float length = 200;
+	const float length = 100;
+	VECTOR holizon = ToXAxis(matRot);
+	holizon.x = (holizon.x);
+	holizon.z = (holizon.z);
+	holizon.y = 0.0f;
+	float angle = FormedAngle(VGet(1,0,0), holizon);
+	
+	valiavle = ToDegree(angle);
+
+	DrawLineAA(CenterX, CenterY, CenterX + length * cosf(angle), CenterY + length * sinf(angle), Green);
+	DrawLineAA(CenterX, CenterY, CenterX - length * cosf(angle), CenterY - length * sinf(angle), Green);
 
 }
 

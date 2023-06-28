@@ -33,7 +33,7 @@ void Player::Init()
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);
 
-	prePos = pos = InitVec;
+	prePos = pos = worldVel = InitVec;
 	mat = MMult(mat, matRot);
 	velocity = VNorm(ToZAxis(matRot));
 	rotateNum = 0.0f;
@@ -75,7 +75,7 @@ void Player::Update(float deltaTime)
 
 void Player::Rotate(float deltaTime)
 {
-#if 0
+#if 1
 	// ヨー.
 	bool yawFlag = false;
 	if (CheckHitKey(KEY_INPUT_E))
@@ -139,6 +139,17 @@ void Player::Rotate(float deltaTime)
 		RotateDecel(roll, RollAccelAndDecel);
 
 	}
+	// クォータニオンから回転行列に変換.
+	VECTOR yAxis = ToYAxis(matRot);// yaw.
+	quat = quat * CreateRotationQuaternion(ToRadian(yaw) * deltaTime, yAxis);
+	VECTOR xAxis = ToXAxis(matRot);// pitch.
+	quat = quat * CreateRotationQuaternion(ToRadian(pitch) * deltaTime, xAxis);
+	VECTOR zAxis = ToZAxis(matRot);// roll.
+	quat = quat * CreateRotationQuaternion(ToRadian(roll) * deltaTime, zAxis);
+	MATRIX matRotVel = QuaternionToMatrix(quat);
+	quat.x = quat.y = quat.z = 0.0f;
+	quat.t = 1.0f;
+
 #else
 	
 	const int WindowCenterX = WindowX / 2;
@@ -200,6 +211,7 @@ void Player::Rotate(float deltaTime)
 	}
 
 	SetMousePoint(WindowCenterX, WindowCenterY);
+
 	// ロール. 
 	bool rollFlag = false;
 	if (CheckHitKey(KEY_INPUT_A))
@@ -219,13 +231,10 @@ void Player::Rotate(float deltaTime)
 	if (!rollFlag)
 	{
 		RotateDecel(roll, RollAccelAndDecel);
-
 	}
 
-#endif
-	//valiable = deltaTime;
 	// クォータニオンから回転行列に変換.
-	VECTOR yAxis = ToYAxis(matRot);// yaw.
+	VECTOR yAxis = VGet(0.0f, 1.0f, 0.0f);// yaw.
 	quat = quat * CreateRotationQuaternion(ToRadian(yaw) * deltaTime, yAxis);
 	VECTOR xAxis = ToXAxis(matRot);// pitch.
 	quat = quat * CreateRotationQuaternion(ToRadian(pitch) * deltaTime, xAxis);
@@ -235,15 +244,21 @@ void Player::Rotate(float deltaTime)
 	quat.x = quat.y = quat.z = 0.0f;
 	quat.t = 1.0f;
 
+#endif
+	//valiable = deltaTime;
+
 	if (prePos.y <= 0.0f)
-	{
-	//	matRotVel = ( MInverse(MGetRotVec2(VGet(0.0f, 1.0f, 0.0f), ToYAxis(matRot))));
+	{ 
 
 	}
-
-	if (CheckHitKey(KEY_INPUT_P)) 
+	if (!rollFlag && roll == 0.0f)
 	{
-		matRotVel = (MInverse(MGetRotVec2(VGet(0.0f, 1.0f, 0.0f), ToYAxis(matRot))));
+	}
+
+	
+	if (CheckHitKey(KEY_INPUT_P))
+	{
+		//matRotVel = (MInverse(MGetRotVec2(VGet(0.0f, 1.0f, 0.0f), ToYAxis(matRot))));
 	}
 	matRot = MMult(matRot, matRotVel);
 	mat = MMult(mat, matRot);// ②.
@@ -296,10 +311,6 @@ void Player::Movement(float deltaTime)
 		{
 			power -= 10;
 		}
-		if (pos.y > 0)
-		{
-			gVelo -= G * deltaTime;
-		}
 	}
 	if (CheckHitKey(KEY_INPUT_S) && power >= 0)
 	{
@@ -312,6 +323,7 @@ void Player::Movement(float deltaTime)
 	// 反映.
 	velocity = VNorm(ToYAxis(matRot)) * power;
 	velocity.y -= G;
+	worldVel += velocity;
 	prePos += velocity * deltaTime;
 	if (prePos.y <= 0)
 	{
@@ -359,8 +371,16 @@ void Player::Draw()
 
 	}
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "p:%f r:%f y:%f",pitch, roll, yaw);
-
+	DrawFormatString(0, 20, white, "p:%f r:%f y:%f", pitch, roll, yaw);
+	DrawFormatString(0, 120, white, "p:%f r:%f y:%f",qwe.x, qwe.y, qwe.z);
+	DrawLine3D(pos, ToZAxis(matRot) * -200, GetColor(255, 0, 0));
+	DrawLine3D(pos, ToXAxis(matRot) * -200, GetColor(0, 255, 0));
+	DrawLine3D(pos, ToYAxis(matRot) * 200, GetColor(0, 0, 255));
+	VECTOR holizon = ToXAxis(matRot);
+	holizon.x = abs(holizon.x) * ((holizon.y > 0.0f) ? -1.0f : 1.0f);
+	holizon.z = abs(holizon.z) * ((holizon.y > 0.0f) ? -1.0f : 1.0f);
+	holizon.y = 0.0f;
+	DrawLine3D(InitVec, InitVec + (holizon * 200), GetColor(255, 0, 255));
 	camera->Draw(pos, matRot, velocity);
 	camera->DebagDraw();
 }

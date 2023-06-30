@@ -371,7 +371,7 @@ void Player::Draw()
 
 	}
 	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "p:%f r:%f y:%f", pitch, roll, yaw);
+	DrawFormatString(0, 20, white, "p:%f r:%f y:%f", ToYAxis(matRot).x, ToYAxis(matRot).y, ToYAxis(matRot).z);
 	DrawFormatString(0, 120, white, "p:%f r:%f y:%f",qwe.x, qwe.y, qwe.z);
 	DrawLine3D(pos, ToZAxis(matRot) * -200, GetColor(255, 0, 0));
 	DrawLine3D(pos, ToXAxis(matRot) * -200, GetColor(0, 255, 0));

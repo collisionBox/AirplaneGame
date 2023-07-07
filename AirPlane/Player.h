@@ -27,33 +27,32 @@ private:
     
     // 機体関係.
     VECTOR velocity; // 速度[m/s].
-    VECTOR worldVel;// ワールド速度.
+    VECTOR inertia;// 慣性.
     const float Acceleration = 36.0f;// 加速度.
     const float MaxSpeed = 295.0f;// 最高速度[m/h].
     const float MaxAltitude = 5400.0f;// 最高高度[m].
     const float UpliftRate = 11.5f;// 垂直上昇率[m].
-    const float Weight = 7.0f;//重量[t] 
+    const float Weight = 10400.0f;;//重量[t] 
     //const float Deceleration = 20.0f;// 減速度.
     //const float StallSpeed = 220.0f;// 失速速度.
     //const float NomalSpeed = 600.0f;// 通常速度.
-    const float DefaultUpwardAccel = 5.0f;
-    const float DownwardAccel = 8.0f;
-    const float DefaultDownwardAccel = 5.0f;
     const VECTOR InitPos = VGet(0.0f, 100.0f, 0.0f);// 初期位置.
     const float ModelScale = 0.08f;// スケール.
+    const float PowerAccelAndDecel = 35.0f;// パワー上下率.
+    const float PowerDefaultDecel = 20.0f;// パワー自然下降率.
+    const float MaxPower = 40.0f;// 最大パワー.
+    const float MinPower = -25.0f;// 最小パワー.
 
     const float YawAccelAndDecel = 3.0f;
     const float MaxYawSpeed = 150.0f;
-
     const float PitchAccelAndDecel = 2.0f;
     const float MaxPichSpeed = 100.0f;
-
     const float RollAccelAndDecel = 5.0f;
     const float MaxRollSpeed = 105.0f;
 
     const MATRIX matScale = MGetScale(VGet(ModelScale, ModelScale, ModelScale));// スケール行列.
     //float speed;
-    float power = 0;
+    float power;
     MATRIX mat;// ワールド座標.
     MATRIX matRot;// 回転行列.
     MATRIX matTrans;// 移動行列.

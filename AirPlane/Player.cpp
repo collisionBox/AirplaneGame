@@ -33,11 +33,11 @@ void Player::Init()
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);
 
-	prePos = pos = worldVel = InitVec;
+	prePos = pos = inertia = InitVec;
 	mat = MMult(mat, matRot);
-	velocity = VNorm(ToZAxis(matRot));
+	velocity = inertia = ToZAxis(matRot);
 	rotateNum = 0.0f;
-
+	power = 0.0f;
 	camera->Init(pos, matRot, modelHandle, CockpitRearSeat);
 	bullet->Init();
 
@@ -286,16 +286,41 @@ void Player::Movement(float deltaTime)
 {
 	// ‰Á‘¬.
 #if 1
-	power = 0;
-	if (CheckHitKey(KEY_INPUT_LSHIFT) && power <= 100)
+	if (CheckHitKey(KEY_INPUT_LSHIFT) && power <= MaxPower)
 	{
-		power = 50;
+		power += PowerAccelAndDecel * deltaTime;
+		if (power > MaxPower)
+		{
+			power = MaxPower;
+		}
 	}
-	if (CheckHitKey(KEY_INPUT_LCONTROL) && power >= 0)
+	else if (CheckHitKey(KEY_INPUT_LCONTROL) && power >= MinPower)
 	{
-		power -= 10;
+		power -= PowerAccelAndDecel * deltaTime;
+		if (power < MinPower)
+		{
+			power = MinPower;
+		}
 	}
-	
+	else 
+	{
+		if (power > 0)
+		{
+			power -= PowerDefaultDecel * deltaTime;
+			if (power < 0)
+			{
+				power = 0.0f;
+			}
+		}
+		if (power < 0)
+		{
+			power += PowerDefaultDecel * deltaTime;
+			if (power > 0)
+			{
+				power = 0.0f;
+			}
+		}
+	}
 	if (pos.y <= 0)
 	{
 		pos.y = 0;
@@ -321,10 +346,10 @@ void Player::Movement(float deltaTime)
 #endif	
 
 	// ”½‰f.
-	velocity = VNorm(ToYAxis(matRot)) * power;
+	velocity = ToYAxis(matRot) * power;
 	velocity.y -= G;
-	worldVel += velocity;
-	prePos += velocity * deltaTime;
+	inertia += velocity;
+	prePos += inertia * deltaTime;
 	if (prePos.y <= 0)
 	{
 		prePos.y = 0;
@@ -370,17 +395,13 @@ void Player::Draw()
 		MV1DrawModel(modelHandle);
 
 	}
-	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
+	DrawFormatString(0, 0, white, "x:%f y:%f z:%f", pos.x, pos.y, pos.z);
 	DrawFormatString(0, 20, white, "p:%f r:%f y:%f", ToYAxis(matRot).x, ToYAxis(matRot).y, ToYAxis(matRot).z);
-	DrawFormatString(0, 120, white, "p:%f r:%f y:%f",qwe.x, qwe.y, qwe.z);
-	DrawLine3D(pos, ToZAxis(matRot) * -200, GetColor(255, 0, 0));
-	DrawLine3D(pos, ToXAxis(matRot) * -200, GetColor(0, 255, 0));
-	DrawLine3D(pos, ToYAxis(matRot) * 200, GetColor(0, 0, 255));
-	VECTOR holizon = ToXAxis(matRot);
-	holizon.x = abs(holizon.x) * ((holizon.y > 0.0f) ? -1.0f : 1.0f);
-	holizon.z = abs(holizon.z) * ((holizon.y > 0.0f) ? -1.0f : 1.0f);
-	holizon.y = 0.0f;
-	DrawLine3D(InitVec, InitVec + (holizon * 200), GetColor(255, 0, 255));
+	DrawFormatString(0, 120, white, "p:%f r:%f y:%f", power, qwe.y, qwe.z);
+	DrawLine3D(pos, pos + ToZAxis(matRot) * -200, GetColor(255, 0, 0));
+	DrawLine3D(pos, pos + ToXAxis(matRot) * -200, GetColor(0, 255, 0));
+	DrawLine3D(pos, pos + ToYAxis(matRot) * 200, GetColor(0, 0, 255));
+	DrawLine3D(pos, pos + inertia * 100, GetColor(255, 0, 255));
 	camera->Draw(pos, matRot, velocity);
 	camera->DebagDraw();
 }

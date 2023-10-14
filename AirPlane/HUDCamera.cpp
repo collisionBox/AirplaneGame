@@ -35,8 +35,16 @@ void HUDCamera::UI(VECTOR pos, MATRIX matRot, VECTOR velocity)
 
 void HUDCamera::VirticalGyro(VECTOR pos, MATRIX matRot)
 {
-	const float length = 200;
+	const float length = 100;
+	VECTOR YAxis = ToYAxis(matRot);
+	YAxis = YAxis - ToZAxis(matRot) * YAxis.z;
+	float angle = FormedAngle(YAxis, VGet(0.0f, 1.0f, 0.0f));
+	VECTOR xAxis = ToXAxis(matRot);
+	YAxis.y = ((YAxis.y < 0) ? 1 : -1);
 
+	DrawLineAA(CenterX, CenterY, CenterX - length * cosf(angle), CenterY - length * sinf(angle), Green);
+	DrawLineAA(CenterX, CenterY, CenterX + length * cosf(angle), CenterY + length * sinf(angle), Green);
+	valiavle = ToDegree(angle) * YAxis.y;
 }
 
 void HUDCamera::Lectil(VECTOR pos, MATRIX matRot)
@@ -49,7 +57,7 @@ void HUDCamera::Lectil(VECTOR pos, MATRIX matRot)
 	DrawLineAA(CenterX - Space - length, CenterY, CenterX - Space, CenterY, Green);// 9Žž.
 	DrawLineAA(CenterX + Space, CenterY, CenterX + Space + length, CenterY, Green);// 3Žž.
 #else
-	const float Orange = GetColor(252, 150, 92);
+	const int Orange = GetColor(252, 150, 92);
 	DrawCircleAA(CenterX, CenterY, 1, 50, Green, true);// “à‰~.
 	DrawCircleAA(CenterX, CenterY, 25, 50, Orange, false, 2.5f);// ŠO‰~.
 #endif

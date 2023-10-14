@@ -33,11 +33,11 @@ void Player::Init()
 	matRot = QuaternionToMatrix(quat);
 	mat = MMult(mat, matRot);
 
-	prePos = pos = InitVec;
+	prePos = pos = inertia = InitVec;
 	mat = MMult(mat, matRot);
-	velocity = VNorm(ToZAxis(matRot));
+	velocity = inertia = ToZAxis(matRot);
 	rotateNum = 0.0f;
-
+	power = 0.0f;
 	camera->Init(pos, matRot, modelHandle, CockpitRearSeat);
 	bullet->Init();
 
@@ -139,50 +139,6 @@ void Player::Rotate(float deltaTime)
 		RotateDecel(roll, RollAccelAndDecel);
 
 	}
-#else
-	
-	const int WindowCenterX = WindowX / 2;
-	const int WindowCenterY = WindowY / 2;
-	int mouseX = 0;
-	int mouseY = 0;
-	GetMousePoint(&mouseX, &mouseY);
-	valiable[0] = WindowCenterX - mouseX;
-	valiable[1] = WindowCenterY - mouseY;
-	roll = (WindowCenterX - mouseX) * mouseSensitivity;
-	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)// 最大回転速度を超えないように.
-	{
-		roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
-	}
-
-	pitch = (mouseY - WindowCenterY) * mouseSensitivity;
-	if (pitch > MaxPichSpeed || pitch < -MaxPichSpeed)
-	{
-		pitch = MaxPichSpeed * ((pitch < 0) ? -1.0f : 1.0f);
-	}
-	
-	SetMousePoint(WindowCenterX, WindowCenterY);
-
-	bool yawFlag = false;
-	if (CheckHitKey(KEY_INPUT_A))
-	{
-		yaw -= YawAccelAndDecel;
-		yawFlag = true;
-	}
-	if (CheckHitKey(KEY_INPUT_D))
-	{
-		yaw += YawAccelAndDecel;
-		yawFlag = true;
-	}
-	if (yaw > MaxYawSpeed || yaw < -MaxYawSpeed)
-	{
-		yaw = MaxYawSpeed * ((yaw < 0) ? -1.0f : 1.0f);
-	}
-	if (!yawFlag)
-	{
-		yaw = 0.0f;
-	}
-#endif
-	//valiable = deltaTime;
 	// クォータニオンから回転行列に変換.
 	VECTOR yAxis = ToYAxis(matRot);// yaw.
 	quat = quat * CreateRotationQuaternion(ToRadian(yaw) * deltaTime, yAxis);
@@ -194,15 +150,115 @@ void Player::Rotate(float deltaTime)
 	quat.x = quat.y = quat.z = 0.0f;
 	quat.t = 1.0f;
 
-	if (prePos.y <= 0.0f)
-	{
-	//	matRotVel = ( MInverse(MGetRotVec2(VGet(0.0f, 1.0f, 0.0f), ToYAxis(matRot))));
+#else
+	
+	const int WindowCenterX = WindowX / 2;
+	const int WindowCenterY = WindowY / 2;
+	int mouseX = 0;
+	int mouseY = 0;
+	GetMousePoint(&mouseX, &mouseY);
+	valiable[0] = WindowCenterX - mouseX;
+	valiable[1] = WindowCenterY - mouseY;
 
+	float pitchAmount = (WindowCenterY - mouseY) * mouseSensitivity;
+	float yawAmount = (WindowCenterX - mouseX) * mouseSensitivity;
+
+	bool pitchFlag = false;
+	if (abs(pitch) <= abs(pitchAmount))
+	{
+		if (pitchAmount > 0)
+		{
+			pitch += PitchAccelAndDecel;
+			pitchFlag = true;
+		}
+		else if (pitchAmount < 0)
+		{
+			pitch -= PitchAccelAndDecel;
+			pitchFlag = true;
+		}
+	}
+	if (pitch > MaxPichSpeed || pitch < -MaxPichSpeed)
+	{
+		pitch = MaxPichSpeed * ((pitch > 0) ? 1.0f : -1.0f);
+	}
+	if (!pitchFlag)
+	{
+		RotateDecel(pitch, PitchAccelAndDecel);
 	}
 
-	if (CheckHitKey(KEY_INPUT_P)) 
+	bool yawFlag = false;
+	if (abs(yaw) <= abs(yawAmount))
 	{
+		if (yawAmount < 0)
+		{
+			yaw += YawAccelAndDecel;
+			yawFlag = true;
+		}
+		else if (yawAmount > 0)
+		{
+			yaw -= YawAccelAndDecel;
+			yawFlag = true;
+		}
+	}
+	
+	if (yaw > MaxYawSpeed || yaw < -MaxYawSpeed)
+	{
+		yaw = MaxYawSpeed * ((yaw < 0) ? -1.0f : 1.0f);
+	}
+	if (!yawFlag)
+	{
+		RotateDecel(yaw, YawAccelAndDecel);
+	}
 
+	SetMousePoint(WindowCenterX, WindowCenterY);
+
+	// ロール. 
+	bool rollFlag = false;
+	if (CheckHitKey(KEY_INPUT_A))
+	{
+		roll += -RollAccelAndDecel;
+		rollFlag = true;
+	}
+	else if (CheckHitKey(KEY_INPUT_D))
+	{
+		roll += RollAccelAndDecel;
+		rollFlag = true;
+	}
+	if (roll > MaxRollSpeed || roll < -MaxRollSpeed)// 最大回転速度を超えないように.
+	{
+		roll = MaxRollSpeed * ((roll > 0) ? 1.0f : -1.0f);
+	}
+	if (!rollFlag)
+	{
+		RotateDecel(roll, RollAccelAndDecel);
+	}
+
+	// クォータニオンから回転行列に変換.
+	VECTOR yAxis = VGet(0.0f, 1.0f, 0.0f);// yaw.
+	quat = quat * CreateRotationQuaternion(ToRadian(yaw) * deltaTime, yAxis);
+	VECTOR xAxis = ToXAxis(matRot);// pitch.
+	quat = quat * CreateRotationQuaternion(ToRadian(pitch) * deltaTime, xAxis);
+	VECTOR zAxis = ToZAxis(matRot);// roll.
+	quat = quat * CreateRotationQuaternion(ToRadian(roll) * deltaTime, zAxis);
+	MATRIX matRotVel = QuaternionToMatrix(quat);
+	quat.x = quat.y = quat.z = 0.0f;
+	quat.t = 1.0f;
+
+#endif
+	//valiable = deltaTime;
+
+	if (prePos.y <= 0.0f)
+	{ 
+
+	}
+	if (!rollFlag && roll == 0.0f)
+	{
+	}
+
+	
+	if (CheckHitKey(KEY_INPUT_P))
+	{
+		//matRotVel = (MInverse(MGetRotVec2(VGet(0.0f, 1.0f, 0.0f), ToYAxis(matRot))));
 	}
 	matRot = MMult(matRot, matRotVel);
 	mat = MMult(mat, matRot);// ②.
@@ -230,16 +286,41 @@ void Player::Movement(float deltaTime)
 {
 	// 加速.
 #if 1
-	power = 0;
-	if (CheckHitKey(KEY_INPUT_LSHIFT) && power <= 100)
+	if (CheckHitKey(KEY_INPUT_LSHIFT) && power <= MaxPower)
 	{
-		power = 50;
+		power += PowerAccelAndDecel * deltaTime;
+		if (power > MaxPower)
+		{
+			power = MaxPower;
+		}
 	}
-	if (CheckHitKey(KEY_INPUT_LCONTROL) && power >= 0)
+	else if (CheckHitKey(KEY_INPUT_LCONTROL) && power >= MinPower)
 	{
-		power -= 10;
+		power -= PowerAccelAndDecel * deltaTime;
+		if (power < MinPower)
+		{
+			power = MinPower;
+		}
 	}
-	
+	else 
+	{
+		if (power > 0)
+		{
+			power -= PowerDefaultDecel * deltaTime;
+			if (power < 0)
+			{
+				power = 0.0f;
+			}
+		}
+		if (power < 0)
+		{
+			power += PowerDefaultDecel * deltaTime;
+			if (power > 0)
+			{
+				power = 0.0f;
+			}
+		}
+	}
 	if (pos.y <= 0)
 	{
 		pos.y = 0;
@@ -255,10 +336,6 @@ void Player::Movement(float deltaTime)
 		{
 			power -= 10;
 		}
-		if (pos.y > 0)
-		{
-			gVelo -= G * deltaTime;
-		}
 	}
 	if (CheckHitKey(KEY_INPUT_S) && power >= 0)
 	{
@@ -269,9 +346,10 @@ void Player::Movement(float deltaTime)
 #endif	
 
 	// 反映.
-	velocity = VNorm(ToYAxis(matRot)) * power;
+	velocity = ToYAxis(matRot) * power;
 	velocity.y -= G;
-	prePos += velocity * deltaTime;
+	inertia += velocity;
+	prePos += inertia * deltaTime;
 	if (prePos.y <= 0)
 	{
 		prePos.y = 0;
@@ -317,9 +395,13 @@ void Player::Draw()
 		MV1DrawModel(modelHandle);
 
 	}
-	DrawFormatString(0, 0, white, "%f:%f:%f", pos.x, pos.y, pos.z);
-	DrawFormatString(0, 20, white, "p:%f r:%f y:%f",pitch, roll, yaw);
-
+	DrawFormatString(0, 0, white, "x:%f y:%f z:%f", pos.x, pos.y, pos.z);
+	DrawFormatString(0, 20, white, "p:%f r:%f y:%f", ToYAxis(matRot).x, ToYAxis(matRot).y, ToYAxis(matRot).z);
+	DrawFormatString(0, 120, white, "p:%f r:%f y:%f", power, qwe.y, qwe.z);
+	DrawLine3D(pos, pos + ToZAxis(matRot) * -200, GetColor(255, 0, 0));
+	DrawLine3D(pos, pos + ToXAxis(matRot) * -200, GetColor(0, 255, 0));
+	DrawLine3D(pos, pos + ToYAxis(matRot) * 200, GetColor(0, 0, 255));
+	DrawLine3D(pos, pos + inertia * 100, GetColor(255, 0, 255));
 	camera->Draw(pos, matRot, velocity);
 	camera->DebagDraw();
 }

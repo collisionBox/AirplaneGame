@@ -75,6 +75,10 @@ float QSize(QUATERNION in);
 
 QUATERNION QNorm(QUATERNION in);
 
+VECTOR QtoV(QUATERNION in);// ë ñ⁄ÇæÅI.
+
+VECTOR MtoV(MATRIX mat);
+
 VECTOR GetTransMat2Vec(MATRIX matrix);
 
 // @brief mat * mat

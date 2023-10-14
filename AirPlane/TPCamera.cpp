@@ -10,8 +10,11 @@ void TPCamera::Init(VECTOR pos, MATRIX matRot, const int modelHandle, const int 
 void TPCamera::Update(VECTOR pos, MATRIX matRot, float deltaTime)
 {
 	targetPos = pos;
-	this->pos = pos + ToZAxis(matRot) * OffsetX;
+	VECTOR aimPos = targetPos + ToZAxis(matRot) * OffsetX;
+	VECTOR posMoveDir = aimPos - this->pos;
+	this->pos += posMoveDir * SpringStrength * deltaTime;
 	this->pos.y = pos.y + OffsetY;
+
 	if (!CheckHitKey(KEY_INPUT_C))
 	{
 
